@@ -130,7 +130,7 @@ class Game {
       
       return speler.throwAndGrab(possibleBeurt)
     case .Pass:
-      print("Speler \(speler.name): passt")
+      print("Speler \(speler.name): past")
       if hasPassed == nil {
         hasPassed = spelerIndex
       }
