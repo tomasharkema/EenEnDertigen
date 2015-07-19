@@ -240,6 +240,10 @@ class Game {
   }
   
   func start() {
+    
+    // reset
+    hasPassed = nil
+    
     shuffle()
     
     deel()
