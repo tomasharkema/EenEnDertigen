@@ -13,6 +13,15 @@ enum Symbool: Character {
   case Schoppen = "♠"
   case Klaver = "♦"
   case Harten = "♥"
+  
+  var color: Color {
+    switch self {
+    case .Ruiten, .Schoppen:
+      return .Black
+    case .Klaver, .Harten:
+      return .Red
+    }
+  }
 }
 
 let AllSymbols: [Symbool] = [.Ruiten, .Schoppen, .Klaver, .Harten]
@@ -51,7 +60,9 @@ struct Kaart: CustomStringConvertible, Equatable {
   let nummer: Nummer
   
   var description: String {
-    return "\(symbool.rawValue)\(nummer.rawValue)"
+    let color = symbool.color
+    
+    return color >>> "\(symbool.rawValue)\(nummer.rawValue)"
   }
 }
 

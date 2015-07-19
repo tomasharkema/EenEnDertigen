@@ -8,6 +8,9 @@
 
 import Foundation
 
+let Background = "44"
+let TextColor = "39"
+
 struct Position {
   let x: Int
   let y: Int
@@ -25,14 +28,23 @@ struct Position {
   }
 }
 
+enum Color: String {
+  case Red = "31"
+  case Black = "30"
+}
+
 let ClearChar = "\u{1B}[2J"
 
 func clear() {
   print(ClearChar)
 }
 
+func setBackground() {
+  print("\u{1B}[\(TextColor);\(Background);m")
+}
+
 func print(pos: Position, string: String) {
-  print("\(pos.cliRep)\(string)")
+  print("\u{001B}[\(TextColor);\(Background);m\(pos.cliRep)\(string)")
 }
 
 infix operator >>> {}
@@ -40,3 +52,8 @@ infix operator >>> {}
 func >>>(lhs: Position, rhs: String) {
   print(lhs, string: rhs)
 }
+
+func >>>(color: Color, string: String) -> String {
+  return "\u{001B}[47;\(color.rawValue)m\(string)\u{001B}[\(TextColor);\(Background)m"
+}
+

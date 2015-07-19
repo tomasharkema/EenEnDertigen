@@ -17,6 +17,7 @@ struct PossibleBeurt {
 enum Beurt {
   case Switch(PossibleBeurt)
   case Pass
+  case Wissel
 }
 
 func AIbeurt(hand: Speler, tafel: Tafel) -> Beurt {

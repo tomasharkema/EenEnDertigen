@@ -87,6 +87,8 @@ struct Speler: CustomStringConvertible, Equatable, Hashable {
         return "pakt: \(possibleBeurt.grabKaart.0), gooit: \(possibleBeurt.throwKaart.0)"
       case .Pass:
         return "Pas"
+      case .Wissel:
+        return "Omgewisseld"
       }
     } else {
       return ""
@@ -147,6 +149,12 @@ class Game {
     tafel = [deck.draw(), deck.draw(), deck.draw()]
   }
   
+  func pass(spelerIndex: Int) {
+    if hasPassed == nil {
+      hasPassed = spelerIndex
+    }
+  }
+  
   func commitBeurt(spelerIndex: Int, var speler: Speler, beurt: Beurt) -> Speler {
     speler.beurten.append(beurt)
     switch beurt {
@@ -155,17 +163,21 @@ class Game {
       
       return speler.throwAndGrab(possibleBeurt)
     case .Pass:
-      if hasPassed == nil {
-        hasPassed = spelerIndex
-      }
+      pass(spelerIndex)
+      return speler
+    case .Wissel:
+      pass(spelerIndex)
+      let oldTafel = tafel
+      tafel = speler.kaarten
+      speler.kaarten = oldTafel
       return speler
     }
   }
   
   private func getKeuzeFromInput(input: String) -> (Int, Int)? {
+    
     //input checking:
     if input.characters.count != 2 {
-      
       InputPosition.down(1) >>> "Je moet p of 2 cijfers invoeren..."
       return nil
     }
@@ -187,13 +199,16 @@ class Game {
   
   func getBeurtFromUser(speler: Speler) -> Beurt {
     
-    HandPosition >>> "Hand:  \(speler.kaarten)"
-    InputPosition >>> "Maak je keuze: Type '11' om kaart 1 te pakken, en kaart 1 te gooien. Type 'p' om te passen."
+    let kaartenString = " ".join(speler.kaarten.map { $0.description })
+    HandPosition >>> "Hand:  \(kaartenString)"
+    InputPosition >>> "Maak je keuze: Type '11' om kaart 1 te pakken, en kaart 1 te gooien. Type 'p' om te passen. Type 'w' om alle kaarten met de tafel te wisselen."
     
     let input = getKeyboardInput()
     
     if input == "p" {
       return .Pass
+    } else if input == "w" {
+      return .Wissel
     } else {
       if let keuze = getKeuzeFromInput(input) {
         return .Switch(PossibleBeurt(throwKaart: (speler.kaarten[keuze.1], keuze.1), grabKaart: (tafel[keuze.0], keuze.0), points: nil))
@@ -234,9 +249,10 @@ class Game {
   }
   
   func printState() {
+    setBackground()
     clear()
     HeaderPosition >>> "EENENDERTIGEN"
-    TafelPosition >>> tafel.description
+    TafelPosition >>> " ".join(tafel.map { $0.description })
     
     for speler in spelers {
       speler.position >>> speler.name
@@ -246,8 +262,10 @@ class Game {
   }
   
   func printEndState() {
+    setBackground()
     clear()
     HeaderPosition >>> "EENENDERTIGEN"
+    TafelPosition >>> " ".join(tafel.map { $0.description })
     
     let losers = pickLosers()
     
@@ -261,7 +279,9 @@ class Game {
       }
       
       speler.position >>> "\(speler.name)\(extraMessage)"
-      speler.position.down(1) >>> "\(speler.kaarten) \(speler.points)"
+      
+      let kaartenString = " ".join(speler.kaarten.map { $0.description })
+      speler.position.down(1) >>> "\(kaartenString) \(speler.points)"
     }
   }
   

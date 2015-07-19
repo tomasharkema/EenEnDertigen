@@ -34,22 +34,22 @@ class GameTest: XCTestCase {
         Kaart(symbool: .Schoppen, nummer: .Boer),
         Kaart(symbool: .Schoppen, nummer: .Tien),
         Kaart(symbool: .Klaver, nummer: .Tien)
-      ], name: "Noord"),
+      ], name: "Noord", beurten: []),
       Speler(kaarten: [
         Kaart(symbool: .Harten, nummer: .Aas),
         Kaart(symbool: .Harten, nummer: .Negen),
         Kaart(symbool: .Harten, nummer: .Tien)
-      ], name: "Oost"),
+      ], name: "Oost", beurten: []),
       Speler(kaarten: [
         Kaart(symbool: .Klaver, nummer: .Negen),
         Kaart(symbool: .Harten, nummer: .Boer),
         Kaart(symbool: .Klaver, nummer: .Aas)
-      ], name: "Zuid"),
+      ], name: "Zuid", beurten: []),
       Speler(kaarten: [
         Kaart(symbool: .Schoppen, nummer: .Negen),
         Kaart(symbool: .Klaver, nummer: .Boer),
         Kaart(symbool: .Harten, nummer: .Zeven)
-      ], name: "West")
+      ], name: "West", beurten: [])
     ]
     
     XCTAssertEqual(game.pickLosers(), [game.spelers[3]])
@@ -69,22 +69,22 @@ class GameTest: XCTestCase {
         Kaart(symbool: .Schoppen, nummer: .Heer),
         Kaart(symbool: .Harten, nummer: .Heer),
         Kaart(symbool: .Klaver, nummer: .Heer)
-      ], name: "Noord"),
+      ], name: "Noord", beurten: []),
       Speler(kaarten: [
         Kaart(symbool: .Klaver, nummer: .Zeven),
         Kaart(symbool: .Schoppen, nummer: .Negen),
         Kaart(symbool: .Schoppen, nummer: .Aas)
-      ], name: "Oost"),
+      ], name: "Oost", beurten: []),
       Speler(kaarten: [
         Kaart(symbool: .Schoppen, nummer: .Tien),
         Kaart(symbool: .Schoppen, nummer: .Boer),
         Kaart(symbool: .Schoppen, nummer: .Zeven)
-      ], name: "Zuid"),
+      ], name: "Zuid", beurten: []),
       Speler(kaarten: [
         Kaart(symbool: .Ruiten, nummer: .Boer),
         Kaart(symbool: .Ruiten, nummer: .Heer),
         Kaart(symbool: .Klaver, nummer: .Boer)
-      ], name: "West")
+      ], name: "West", beurten: [])
     ]
     
     XCTAssertEqual(game.pickLosers(), [game.spelers[1], game.spelers[3]])

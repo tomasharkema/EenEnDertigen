@@ -19,4 +19,4 @@ let OostPosition = Position(x: 75, y: 10)
 let ZuidPosition = Position(x: 50, y: 15)
 let WestPosition = Position(x: 25, y: 10)
 
-let HandPosition = ZuidPosition.down(3).right(-5)
+let HandPosition = ZuidPosition.down(5).right(-5)
