@@ -247,6 +247,8 @@ class Game {
   
   func printEndState() {
     clear()
+    HeaderPosition >>> "EENENDERTIGEN"
+    
     let losers = pickLosers()
     
     for speler in spelers {
