@@ -161,7 +161,8 @@ class Game {
   }
   
   func getBeurtFromUser(speler: Speler) -> Beurt {
-    print("\n\nMaak je keuze: Type '11' om kaart 1 te pakken, en kaart 1 te gooien. Type 'p' om te passen. \nTafel: \(tafel)\nHand:  \(speler.kaarten)")
+    print("\(InputPosition.cliRep)Maak je keuze: Type '11' om kaart 1 te pakken, en kaart 1 te gooien. Type 'p' om te passen. \nTafel: \(tafel)\nHand:  \(speler.kaarten)")
+    
     let input = getKeyboardInput()
     
     if input == "p" {
@@ -188,7 +189,7 @@ class Game {
       
       var speler: Speler!
       
-      if index == 0 {
+      if index == 0 && !Test {
         speler = commitUserBeurt(spelers[index])
       } else {
         speler = commitBeurt(index, speler: spelers[index], beurt: AIbeurt(spelers[index], tafel: tafel))
@@ -208,13 +209,13 @@ class Game {
   }
   
   func printState() {
-    print("Tafel: \(tafel)")
+    print("\(TafelPosition.cliRep)Tafel: \(tafel)")
   }
   
   func printEndState() {
-    print("Status:")
-    for speler in spelers {
-      print("Speler \(speler.name): \(speler.kaarten) \(speler.points)")
+    print("\(StatusPosition.cliRep)Status:")
+    for (idx, speler) in spelers.enumerate() {
+      print("\(StatusPosition.down(idx*2).cliRep)Speler \(speler.name): \(speler.kaarten) \(speler.points)")
     }
   }
   
@@ -248,15 +249,11 @@ class Game {
     
     deel()
     
-    print("-------------------")
     printState()
-    print("-------------------")
     beurt()
-    print("-------------------")
-    print("FINISH:")
     printEndState()
     
     let losers = ", ".join(pickLosers().map { $0.name })
-    print("Verliezer: \(losers)")
+    print("\(VerliezerPosition.cliRep)Verliezer: \(losers)")
   }
 }

@@ -12,11 +12,13 @@
 		C35064431B5A922900DD1EAD /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35064421B5A922900DD1EAD /* Game.swift */; };
 		C35064451B5A950800DD1EAD /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35064441B5A950800DD1EAD /* Extensions.swift */; };
 		C35064471B5A9B2B00DD1EAD /* Ai.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35064461B5A9B2B00DD1EAD /* Ai.swift */; };
-		C35064511B5BE41600DD1EAD /* EenEnDertigenTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35064501B5BE41600DD1EAD /* EenEnDertigenTest.swift */; };
 		C35064571B5BE47300DD1EAD /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35064421B5A922900DD1EAD /* Game.swift */; };
 		C35064581B5BE47B00DD1EAD /* Cards.swift in Sources */ = {isa = PBXBuildFile; fileRef = C350643E1B5A91E300DD1EAD /* Cards.swift */; };
 		C35064591B5BE47E00DD1EAD /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35064441B5A950800DD1EAD /* Extensions.swift */; };
 		C350645A1B5BE48000DD1EAD /* Ai.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35064461B5A9B2B00DD1EAD /* Ai.swift */; };
+		C350645C1B5BF1CC00DD1EAD /* GameTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C350645B1B5BF1CC00DD1EAD /* GameTest.swift */; };
+		C350645D1B5BF3AA00DD1EAD /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35064371B5A91B500DD1EAD /* main.swift */; };
+		C350645F1B5BF8DF00DD1EAD /* Positions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C350645E1B5BF8DF00DD1EAD /* Positions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -39,8 +41,9 @@
 		C35064441B5A950800DD1EAD /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		C35064461B5A9B2B00DD1EAD /* Ai.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Ai.swift; sourceTree = "<group>"; };
 		C350644E1B5BE41600DD1EAD /* EenEnDertigenTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EenEnDertigenTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		C35064501B5BE41600DD1EAD /* EenEnDertigenTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EenEnDertigenTest.swift; sourceTree = "<group>"; };
 		C35064521B5BE41600DD1EAD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C350645B1B5BF1CC00DD1EAD /* GameTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameTest.swift; sourceTree = "<group>"; };
+		C350645E1B5BF8DF00DD1EAD /* Positions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Positions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +90,7 @@
 				C350643E1B5A91E300DD1EAD /* Cards.swift */,
 				C35064441B5A950800DD1EAD /* Extensions.swift */,
 				C35064461B5A9B2B00DD1EAD /* Ai.swift */,
+				C350645E1B5BF8DF00DD1EAD /* Positions.swift */,
 			);
 			path = EenEnDertigen;
 			sourceTree = "<group>";
@@ -94,7 +98,7 @@
 		C350644F1B5BE41600DD1EAD /* EenEnDertigenTest */ = {
 			isa = PBXGroup;
 			children = (
-				C35064501B5BE41600DD1EAD /* EenEnDertigenTest.swift */,
+				C350645B1B5BF1CC00DD1EAD /* GameTest.swift */,
 				C35064521B5BE41600DD1EAD /* Info.plist */,
 			);
 			path = EenEnDertigenTest;
@@ -191,6 +195,7 @@
 				C35064431B5A922900DD1EAD /* Game.swift in Sources */,
 				C350643F1B5A91E300DD1EAD /* Cards.swift in Sources */,
 				C35064471B5A9B2B00DD1EAD /* Ai.swift in Sources */,
+				C350645F1B5BF8DF00DD1EAD /* Positions.swift in Sources */,
 				C35064451B5A950800DD1EAD /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -200,8 +205,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				C35064581B5BE47B00DD1EAD /* Cards.swift in Sources */,
-				C35064511B5BE41600DD1EAD /* EenEnDertigenTest.swift in Sources */,
 				C35064571B5BE47300DD1EAD /* Game.swift in Sources */,
+				C350645D1B5BF3AA00DD1EAD /* main.swift in Sources */,
+				C350645C1B5BF1CC00DD1EAD /* GameTest.swift in Sources */,
 				C350645A1B5BE48000DD1EAD /* Ai.swift in Sources */,
 				C35064591B5BE47E00DD1EAD /* Extensions.swift in Sources */,
 			);
