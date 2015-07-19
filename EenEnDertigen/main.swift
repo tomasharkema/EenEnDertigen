@@ -10,13 +10,11 @@ import Foundation
 
 let game = Game()
 
-print("\u{1B}[2J")
-print("\u{1B}[0;0HEENENDERTIGEN")
-
 func startGame() {
   game.start()
   
-  print("\n\nType 'r' om het spel te herstarten...")
+  InputPosition >>> "\n\nType 'r' om het spel te herstarten..."
+  
   let input = getKeyboardInput()
   if input == "r" {
     fflush(__stdoutp)

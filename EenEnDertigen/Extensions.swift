@@ -38,7 +38,6 @@ extension Set where Element: Equatable {
     for obj in self {
       if el != obj {
         newArray.insert(obj)
-        (el)
       }
     }
     

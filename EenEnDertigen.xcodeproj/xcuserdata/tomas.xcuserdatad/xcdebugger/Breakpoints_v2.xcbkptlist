@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "EenEnDertigen/main.swift"
-            timestampString = "459012152.312231"
+            timestampString = "459019022.367585"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "22"
-            endingLineNumber = "22"
+            startingLineNumber = "20"
+            endingLineNumber = "20"
             landmarkName = "startGame()"
             landmarkType = "7">
          </BreakpointContent>

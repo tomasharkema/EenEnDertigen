@@ -42,13 +42,7 @@ func AIbeurt(hand: Speler, tafel: Tafel) -> Beurt {
 }
 
 func bestBeurt(beurten: [PossibleBeurt]) -> PossibleBeurt {
-  var bestBeurt = beurten[0]
-
-  for beurt in beurten {
-    if bestBeurt.points < beurt.points {
-      bestBeurt = beurt
-    }
-  }
-
-  return bestBeurt
+  return beurten.maxElement { (lhs, rhs) -> Bool in
+    lhs.points < rhs.points
+  }!
 }

@@ -8,21 +8,15 @@
 
 import Foundation
 
-struct Position {
-  let x: Int
-  let y: Int
-  
-  var cliRep: String {
-    return "\u{1B}[\(y);\(x)H"
-  }
-  
-  func down(n: Int) -> Position {
-    return Position(x: x, y: y+n)
-  }
-}
-
 let HeaderPosition = Position(x: 0, y: 0)
-let TafelPosition = Position(x: 20, y: 0)
+let TafelPosition = Position(x: 50, y: 10)
 let StatusPosition = Position(x: 100, y: 10)
 let VerliezerPosition = Position(x: 50, y: 10)
-let InputPosition = Position(x: 0, y: 20)
+let InputPosition = Position(x: 0, y: 30)
+
+let NoordPosition = Position(x: 50, y: 5)
+let OostPosition = Position(x: 75, y: 10)
+let ZuidPosition = Position(x: 50, y: 15)
+let WestPosition = Position(x: 25, y: 10)
+
+let HandPosition = ZuidPosition.down(3).right(-5)

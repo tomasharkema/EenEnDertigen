@@ -20,7 +20,7 @@ func calculatePoints(base: Kaart, additions: [Kaart]) -> Double {
   var sameCount = 0
   
   for addition in additions {
-    if addition.nummer.rawValue == base.nummer.rawValue {
+    if addition.nummer == base.nummer {
       sameCount++
     }
     
@@ -55,7 +55,7 @@ struct Speler: CustomStringConvertible, Equatable, Hashable {
     var newKaarten = kaarten
     newKaarten.removeAtIndex(beurt.throwKaart.1)
     newKaarten.insert(beurt.grabKaart.0, atIndex: beurt.grabKaart.1)
-    return Speler(kaarten: newKaarten, name: name)
+    return Speler(kaarten: newKaarten, name: name, beurten: beurten)
   }
   
   var description: String {
@@ -64,6 +64,33 @@ struct Speler: CustomStringConvertible, Equatable, Hashable {
   
   var hashValue: Int {
     return name.hashValue
+  }
+  
+  var position: Position {
+    if name == "Noord" {
+      return NoordPosition
+    } else if name == "West" {
+      return WestPosition
+    } else if name == "Oost" {
+      return OostPosition
+    } else {
+      return ZuidPosition
+    }
+  }
+  
+  var beurten: [Beurt]
+  
+  var latestState: String {
+    if let lastBeurt = beurten.last {
+      switch lastBeurt {
+      case let .Switch(possibleBeurt):
+        return "pakt: \(possibleBeurt.grabKaart.0), gooit: \(possibleBeurt.throwKaart.0)"
+      case .Pass:
+        return "Pas"
+      }
+    } else {
+      return ""
+    }
   }
 }
 
@@ -112,25 +139,22 @@ class Game {
   
   func deel() {
     spelers = [
-      Speler(kaarten: [deck.draw(), deck.draw(), deck.draw()], name: "Noord"),
-      Speler(kaarten: [deck.draw(), deck.draw(), deck.draw()], name: "Oost"),
-      Speler(kaarten: [deck.draw(), deck.draw(), deck.draw()], name: "Zuid"),
-      Speler(kaarten: [deck.draw(), deck.draw(), deck.draw()], name: "West")
+      Speler(kaarten: [deck.draw(), deck.draw(), deck.draw()], name: "Zuid (JIJ)", beurten: []),
+      Speler(kaarten: [deck.draw(), deck.draw(), deck.draw()], name: "Oost", beurten: []),
+      Speler(kaarten: [deck.draw(), deck.draw(), deck.draw()], name: "Noord", beurten: []),
+      Speler(kaarten: [deck.draw(), deck.draw(), deck.draw()], name: "West", beurten: [])
     ]
     tafel = [deck.draw(), deck.draw(), deck.draw()]
   }
   
-  func commitBeurt(spelerIndex: Int, speler: Speler, beurt: Beurt) -> Speler {
+  func commitBeurt(spelerIndex: Int, var speler: Speler, beurt: Beurt) -> Speler {
+    speler.beurten.append(beurt)
     switch beurt {
     case let .Switch(possibleBeurt):
-      print("Speler \(speler.name): pakt: \(possibleBeurt.grabKaart.0), gooit: \(possibleBeurt.throwKaart.0)")
-      
-      tafel.removeAtIndex(possibleBeurt.grabKaart.1)
-      tafel.insert(possibleBeurt.throwKaart.0, atIndex: possibleBeurt.grabKaart.1)
+      tafel[possibleBeurt.grabKaart.1] = possibleBeurt.throwKaart.0
       
       return speler.throwAndGrab(possibleBeurt)
     case .Pass:
-      print("Speler \(speler.name): past")
       if hasPassed == nil {
         hasPassed = spelerIndex
       }
@@ -141,7 +165,8 @@ class Game {
   private func getKeuzeFromInput(input: String) -> (Int, Int)? {
     //input checking:
     if input.characters.count != 2 {
-      print("Je moet p of 2 cijfers invoeren...\n\n")
+      
+      InputPosition.down(1) >>> "Je moet p of 2 cijfers invoeren..."
       return nil
     }
     
@@ -161,7 +186,9 @@ class Game {
   }
   
   func getBeurtFromUser(speler: Speler) -> Beurt {
-    print("\(InputPosition.cliRep)Maak je keuze: Type '11' om kaart 1 te pakken, en kaart 1 te gooien. Type 'p' om te passen. \nTafel: \(tafel)\nHand:  \(speler.kaarten)")
+    
+    HandPosition >>> "Hand:  \(speler.kaarten)"
+    InputPosition >>> "Maak je keuze: Type '11' om kaart 1 te pakken, en kaart 1 te gooien. Type 'p' om te passen."
     
     let input = getKeyboardInput()
     
@@ -178,7 +205,6 @@ class Game {
   
   func commitUserBeurt(speler: Speler) -> Speler {
     let beurt = getBeurtFromUser(speler)
-    print("\n")
     return commitBeurt(0, speler: speler, beurt: beurt)
   }
   
@@ -198,7 +224,6 @@ class Game {
       spelers[index] = speler
       printState()
       if speler.points == 31 {
-        print("Speler \(speler.name): VERBIED")
         return
       }
     }
@@ -209,13 +234,32 @@ class Game {
   }
   
   func printState() {
-    print("\(TafelPosition.cliRep)Tafel: \(tafel)")
+    clear()
+    HeaderPosition >>> "EENENDERTIGEN"
+    TafelPosition >>> tafel.description
+    
+    for speler in spelers {
+      speler.position >>> speler.name
+      speler.position.down(1) >>> speler.latestState
+    }
+    
   }
   
   func printEndState() {
-    print("\(StatusPosition.cliRep)Status:")
-    for (idx, speler) in spelers.enumerate() {
-      print("\(StatusPosition.down(idx*2).cliRep)Speler \(speler.name): \(speler.kaarten) \(speler.points)")
+    clear()
+    let losers = pickLosers()
+    
+    for speler in spelers {
+      var extraMessage = ""
+      
+      if losers.contains(speler) {
+        extraMessage = " - Verliezer!"
+      } else if speler.points == 31 {
+        extraMessage = " - Verbied!"
+      }
+      
+      speler.position >>> "\(speler.name)\(extraMessage)"
+      speler.position.down(1) >>> "\(speler.kaarten) \(speler.points)"
     }
   }
   
@@ -252,8 +296,5 @@ class Game {
     printState()
     beurt()
     printEndState()
-    
-    let losers = ", ".join(pickLosers().map { $0.name })
-    print("\(VerliezerPosition.cliRep)Verliezer: \(losers)")
   }
 }
