@@ -13,7 +13,7 @@ let game = Game()
 func startGame() {
   game.start()
   
-  InputPosition >>> "\n\nType 'r' om het spel te herstarten..."
+  InputPosition >>> "Type 'r' om het spel te herstarten..."
   
   let input = getKeyboardInput()
   if input == "r" {

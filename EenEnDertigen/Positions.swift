@@ -12,7 +12,7 @@ let HeaderPosition = Position(x: 0, y: 0)
 let TafelPosition = Position(x: 50, y: 10)
 let StatusPosition = Position(x: 100, y: 10)
 let VerliezerPosition = Position(x: 50, y: 10)
-let InputPosition = Position(x: 0, y: 30)
+let InputPosition = Position(x: 0, y: 25)
 
 let NoordPosition = Position(x: 50, y: 5)
 let OostPosition = Position(x: 75, y: 10)
