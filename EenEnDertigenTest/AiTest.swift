@@ -20,14 +20,14 @@ class AiTest: XCTestCase {
       super.tearDown()
   }
 
-  func testAIbeurt() {
+  func testAiSwitch() {
     // ♥V ♣B ♠H
     let tafel: Tafel = [
       Kaart(symbool: .Harten, nummer: .Vrouw),
       Kaart(symbool: .Klaver, nummer: .Boer),
       Kaart(symbool: .Schoppen, nummer: .Heer)]
     
-    //♥A ♦9 ♦V
+    // ♥A ♦9 ♦V
     let speler = Speler(kaarten: [
       Kaart(symbool: .Harten, nummer: .Aas),
       Kaart(symbool: .Ruiten, nummer: .Negen),
@@ -36,11 +36,49 @@ class AiTest: XCTestCase {
     
     let aiBeurt = AIbeurt(speler, tafel: tafel)
     
-    XCTAssertTrue(aiBeurt == Beurt.Switch(
+    XCTAssertEqual(aiBeurt, Beurt.Switch(
       PossibleBeurt(
         throwKaart: Kaart(symbool: .Ruiten, nummer: .Negen),
         grabKaart: Kaart(symbool: .Harten, nummer: .Vrouw),
         points: 21)))
+  }
+  
+  func testAiPass() {
+    // ♥V ♣B ♠H
+    let tafel: Tafel = [
+      Kaart(symbool: .Harten, nummer: .Vrouw),
+      Kaart(symbool: .Klaver, nummer: .Boer),
+      Kaart(symbool: .Schoppen, nummer: .Heer)]
+    
+    // ♦A ♦10 ♦9
+    let speler = Speler(kaarten: [
+      Kaart(symbool: .Ruiten, nummer: .Aas),
+      Kaart(symbool: .Ruiten, nummer: .Tien),
+      Kaart(symbool: .Ruiten, nummer: .Negen)],
+      name: "Test", beurten: [], position: NoordPosition)
+    
+    let aiBeurt = AIbeurt(speler, tafel: tafel)
+    
+    XCTAssertEqual(aiBeurt, Beurt.Pass)
+  }
+  
+  func testAiWissel() {
+    // ♦A ♦10 ♦9
+    let tafel: Tafel = [
+      Kaart(symbool: .Ruiten, nummer: .Aas),
+      Kaart(symbool: .Ruiten, nummer: .Tien),
+      Kaart(symbool: .Ruiten, nummer: .Negen)]
+    
+    // ♥V ♣B ♠H
+    let speler = Speler(kaarten: [
+      Kaart(symbool: .Harten, nummer: .Vrouw),
+      Kaart(symbool: .Klaver, nummer: .Boer),
+      Kaart(symbool: .Schoppen, nummer: .Heer)],
+      name: "Test", beurten: [], position: NoordPosition)
+    
+    let aiBeurt = AIbeurt(speler, tafel: tafel)
+    
+    XCTAssertEqual(aiBeurt, Beurt.Wissel)
   }
 
   func testPerformanceExample() {

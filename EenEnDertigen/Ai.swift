@@ -74,6 +74,10 @@ func AIbeurt(hand: Speler, tafel: Tafel) -> Beurt {
   if (hand.points > commitBeurt.points) {
     return .Pass
   } else {
+    let wisselPoints = calculatePoints(tafel[0], additions: tafel.without(0))
+    if wisselPoints > commitBeurt.points {
+      return .Wissel
+    }
     return .Switch(commitBeurt)
   }
 }
