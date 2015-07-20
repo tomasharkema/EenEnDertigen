@@ -67,5 +67,5 @@ struct Kaart: CustomStringConvertible, Equatable {
 }
 
 func ==(lhs: Kaart, rhs: Kaart) -> Bool {
-  return lhs.nummer == rhs.nummer && lhs.symbool == lhs.symbool
+  return lhs.nummer == rhs.nummer && lhs.symbool == rhs.symbool
 }

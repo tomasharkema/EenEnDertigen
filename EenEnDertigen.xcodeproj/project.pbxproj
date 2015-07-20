@@ -22,6 +22,8 @@
 		C35064611B5BFDBA00DD1EAD /* CLI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35064601B5BFDBA00DD1EAD /* CLI.swift */; };
 		C35064621B5C02C200DD1EAD /* Positions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C350645E1B5BF8DF00DD1EAD /* Positions.swift */; };
 		C35064631B5C02C600DD1EAD /* CLI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35064601B5BFDBA00DD1EAD /* CLI.swift */; };
+		C35064651B5D4CC700DD1EAD /* AiTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35064641B5D4CC700DD1EAD /* AiTest.swift */; };
+		C35064671B5D538000DD1EAD /* ExtensionTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35064661B5D538000DD1EAD /* ExtensionTest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -48,6 +50,8 @@
 		C350645B1B5BF1CC00DD1EAD /* GameTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameTest.swift; sourceTree = "<group>"; };
 		C350645E1B5BF8DF00DD1EAD /* Positions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Positions.swift; sourceTree = "<group>"; };
 		C35064601B5BFDBA00DD1EAD /* CLI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CLI.swift; sourceTree = "<group>"; };
+		C35064641B5D4CC700DD1EAD /* AiTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AiTest.swift; sourceTree = "<group>"; };
+		C35064661B5D538000DD1EAD /* ExtensionTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtensionTest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +109,8 @@
 			children = (
 				C350645B1B5BF1CC00DD1EAD /* GameTest.swift */,
 				C35064521B5BE41600DD1EAD /* Info.plist */,
+				C35064641B5D4CC700DD1EAD /* AiTest.swift */,
+				C35064661B5D538000DD1EAD /* ExtensionTest.swift */,
 			);
 			path = EenEnDertigenTest;
 			sourceTree = "<group>";
@@ -215,8 +221,10 @@
 				C35064571B5BE47300DD1EAD /* Game.swift in Sources */,
 				C350645D1B5BF3AA00DD1EAD /* main.swift in Sources */,
 				C35064631B5C02C600DD1EAD /* CLI.swift in Sources */,
+				C35064671B5D538000DD1EAD /* ExtensionTest.swift in Sources */,
 				C350645C1B5BF1CC00DD1EAD /* GameTest.swift in Sources */,
 				C350645A1B5BE48000DD1EAD /* Ai.swift in Sources */,
+				C35064651B5D4CC700DD1EAD /* AiTest.swift in Sources */,
 				C35064591B5BE47E00DD1EAD /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -357,6 +365,7 @@
 				C350643D1B5A91B500DD1EAD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C35064531B5BE41600DD1EAD /* Build configuration list for PBXNativeTarget "EenEnDertigenTest" */ = {
 			isa = XCConfigurationList;
@@ -365,6 +374,7 @@
 				C35064551B5BE41600DD1EAD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

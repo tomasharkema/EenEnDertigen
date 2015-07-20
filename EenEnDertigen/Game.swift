@@ -25,6 +25,10 @@ func calculatePoints(base: Kaart, additions: [Kaart]) -> Double {
     }
     
     if sameCount == additions.count {
+      if base.nummer == .Aas {
+        return 33
+      }
+      
       return 30.5
     }
   }
@@ -53,9 +57,9 @@ struct Speler: CustomStringConvertible, Equatable, Hashable {
   
   func throwAndGrab(beurt: PossibleBeurt) -> Speler {
     var newKaarten = kaarten
-    newKaarten.removeAtIndex(beurt.throwKaart.1)
-    newKaarten.insert(beurt.grabKaart.0, atIndex: beurt.grabKaart.1)
-    return Speler(kaarten: newKaarten, name: name, beurten: beurten)
+    newKaarten.remove(beurt.throwKaart)
+    newKaarten.append(beurt.grabKaart)
+    return Speler(kaarten: newKaarten, name: name, beurten: beurten, position: position)
   }
   
   var description: String {
@@ -66,19 +70,8 @@ struct Speler: CustomStringConvertible, Equatable, Hashable {
     return name.hashValue
   }
   
-  var position: Position {
-    if name == "Noord" {
-      return NoordPosition
-    } else if name == "West" {
-      return WestPosition
-    } else if name == "Oost" {
-      return OostPosition
-    } else {
-      return ZuidPosition
-    }
-  }
-  
   var beurten: [Beurt]
+  let position: Position
   
   var latestState: String {
     if let lastBeurt = beurten.last {
@@ -141,10 +134,10 @@ class Game {
   
   func deel() {
     spelers = [
-      Speler(kaarten: [deck.draw(), deck.draw(), deck.draw()], name: "Zuid (JIJ)", beurten: []),
-      Speler(kaarten: [deck.draw(), deck.draw(), deck.draw()], name: "Oost", beurten: []),
-      Speler(kaarten: [deck.draw(), deck.draw(), deck.draw()], name: "Noord", beurten: []),
-      Speler(kaarten: [deck.draw(), deck.draw(), deck.draw()], name: "West", beurten: [])
+      Speler(kaarten: [deck.draw(), deck.draw(), deck.draw()], name: "Zuid (JIJ)", beurten: [], position: ZuidPosition),
+      Speler(kaarten: [deck.draw(), deck.draw(), deck.draw()], name: "Oost", beurten: [], position: OostPosition),
+      Speler(kaarten: [deck.draw(), deck.draw(), deck.draw()], name: "Noord", beurten: [], position: NoordPosition),
+      Speler(kaarten: [deck.draw(), deck.draw(), deck.draw()], name: "West", beurten: [], position: WestPosition)
     ]
     tafel = [deck.draw(), deck.draw(), deck.draw()]
   }
@@ -159,7 +152,7 @@ class Game {
     speler.beurten.append(beurt)
     switch beurt {
     case let .Switch(possibleBeurt):
-      tafel[possibleBeurt.grabKaart.1] = possibleBeurt.throwKaart.0
+      tafel[tafel.indexOf(possibleBeurt.grabKaart)!] = possibleBeurt.throwKaart
       
       return speler.throwAndGrab(possibleBeurt)
     case .Pass:
@@ -211,7 +204,7 @@ class Game {
       return .Wissel
     } else {
       if let keuze = getKeuzeFromInput(input) {
-        return .Switch(PossibleBeurt(throwKaart: (speler.kaarten[keuze.1], keuze.1), grabKaart: (tafel[keuze.0], keuze.0), points: nil))
+        return .Switch(PossibleBeurt(throwKaart: speler.kaarten[keuze.1], grabKaart: tafel[keuze.0], points: nil))
       } else {
         return getBeurtFromUser(speler)
       }

@@ -34,22 +34,22 @@ class GameTest: XCTestCase {
         Kaart(symbool: .Schoppen, nummer: .Boer),
         Kaart(symbool: .Schoppen, nummer: .Tien),
         Kaart(symbool: .Klaver, nummer: .Tien)
-      ], name: "Noord", beurten: []),
+      ], name: "Noord", beurten: [], position: NoordPosition),
       Speler(kaarten: [
         Kaart(symbool: .Harten, nummer: .Aas),
         Kaart(symbool: .Harten, nummer: .Negen),
         Kaart(symbool: .Harten, nummer: .Tien)
-      ], name: "Oost", beurten: []),
+      ], name: "Oost", beurten: [], position: OostPosition),
       Speler(kaarten: [
         Kaart(symbool: .Klaver, nummer: .Negen),
         Kaart(symbool: .Harten, nummer: .Boer),
         Kaart(symbool: .Klaver, nummer: .Aas)
-      ], name: "Zuid", beurten: []),
+      ], name: "Zuid", beurten: [], position: ZuidPosition),
       Speler(kaarten: [
         Kaart(symbool: .Schoppen, nummer: .Negen),
         Kaart(symbool: .Klaver, nummer: .Boer),
         Kaart(symbool: .Harten, nummer: .Zeven)
-      ], name: "West", beurten: [])
+      ], name: "West", beurten: [], position: WestPosition)
     ]
     
     XCTAssertEqual(game.pickLosers(), [game.spelers[3]])
@@ -69,32 +69,95 @@ class GameTest: XCTestCase {
         Kaart(symbool: .Schoppen, nummer: .Heer),
         Kaart(symbool: .Harten, nummer: .Heer),
         Kaart(symbool: .Klaver, nummer: .Heer)
-      ], name: "Noord", beurten: []),
+      ], name: "Noord", beurten: [], position: NoordPosition),
       Speler(kaarten: [
         Kaart(symbool: .Klaver, nummer: .Zeven),
         Kaart(symbool: .Schoppen, nummer: .Negen),
         Kaart(symbool: .Schoppen, nummer: .Aas)
-      ], name: "Oost", beurten: []),
+      ], name: "Oost", beurten: [], position: OostPosition),
       Speler(kaarten: [
         Kaart(symbool: .Schoppen, nummer: .Tien),
         Kaart(symbool: .Schoppen, nummer: .Boer),
         Kaart(symbool: .Schoppen, nummer: .Zeven)
-      ], name: "Zuid", beurten: []),
+      ], name: "Zuid", beurten: [], position: ZuidPosition),
       Speler(kaarten: [
         Kaart(symbool: .Ruiten, nummer: .Boer),
         Kaart(symbool: .Ruiten, nummer: .Heer),
         Kaart(symbool: .Klaver, nummer: .Boer)
-      ], name: "West", beurten: [])
+      ], name: "West", beurten: [], position: WestPosition)
     ]
     
     XCTAssertEqual(game.pickLosers(), [game.spelers[1], game.spelers[3]])
   }
 
-  func testPerformanceExample() {
-      // This is an example of a performance test case.
-      self.measureBlock {
-        self.game.start()
+  func testVerbied() {
+    
+    let speler = Speler(kaarten: [
+      Kaart(symbool: .Schoppen, nummer: .Aas),
+      Kaart(symbool: .Schoppen, nummer: .Heer),
+      Kaart(symbool: .Schoppen, nummer: .Vrouw)
+    ], name: "Test ", beurten: [], position: NoordPosition)
+    
+    XCTAssertEqual(speler.points, 31)
+  }
+  
+  func testDertigHalf() {
+    
+    let speler = Speler(kaarten: [
+      Kaart(symbool: .Schoppen, nummer: .Vrouw),
+      Kaart(symbool: .Klaver, nummer: .Vrouw),
+      Kaart(symbool: .Ruiten, nummer: .Vrouw)
+    ], name: "Test", beurten: [], position: NoordPosition)
+    
+    XCTAssertEqual(speler.points, 30.5)
+  }
+  
+  func testDrieEnDertig() {
+    
+    let speler = Speler(kaarten: [
+      Kaart(symbool: .Schoppen, nummer: .Aas),
+      Kaart(symbool: .Klaver, nummer: .Aas),
+      Kaart(symbool: .Ruiten, nummer: .Aas)
+    ], name: "Test", beurten: [], position: NoordPosition)
+    
+    XCTAssertEqual(speler.points, 33)
+  }
+  
+  func testUniqueDeck() {
+    let game = Game()
+    game.shuffle()
+    
+    var crossReference = [Kaart]()
+    var foundDoubles = false
+    
+    for kaart in game.deck.cards {
+      if crossReference.contains(kaart) {
+        foundDoubles = true
+      } else {
+        crossReference.append(kaart)
       }
+    }
+    
+    XCTAssertFalse(foundDoubles)
+  }
+  
+  func testDeckDraw() {
+    
+    let game = Game()
+    game.shuffle()
+    
+    let firstCard = game.deck.cards.first!
+    let drawnCard = game.deck.draw()
+    
+    XCTAssertEqual(firstCard, drawnCard)
+    XCTAssertEqual(game.deck.cards.contains(firstCard), false)
+  }
+  
+  func testPerformanceExample() {
+    // This is an example of a performance test case.
+    self.measureBlock {
+      self.game.start()
+    }
   }
     
 }

@@ -31,6 +31,14 @@ extension Array {
   }
 }
 
+extension Array where Element: Equatable {
+  mutating func remove(el: Element) {
+    self = self.filter({ (element: Element) -> Bool in
+      el != element
+    })
+  }
+}
+
 extension Set where Element: Equatable {
   func without(el: Element) -> Set<Element> {
     var newArray = Set<Element>()
