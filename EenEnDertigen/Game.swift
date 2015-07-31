@@ -257,6 +257,8 @@ class Game {
       if !speler.isDowner {
         speler.position >>> "\(speler.name) - \(speler.sticks)"
         speler.position.down(1) >>> speler.latestState
+      } else {
+        speler.position >>> "\(speler.name) DOOD"
       }
     }
     
@@ -279,18 +281,24 @@ class Game {
     let losers = pickLosers()
     
     for speler in spelers {
-      var extraMessage = ""
-      
-      if losers.contains(speler) {
-        extraMessage = " - Verliezer!"
-      } else if speler.points == 31 {
-        extraMessage = " - Verbied!"
+      if !speler.isDowner {
+        
+        var extraMessage = ""
+        if shouldDoAnotherRound() {
+          extraMessage = " WINNAAR!"
+        } else if losers.contains(speler) {
+          extraMessage = " - Verliezer!"
+        } else if speler.points == 31 {
+          extraMessage = " - Verbied!"
+        }
+        
+        speler.position >>> "\(speler.name)\(extraMessage) - \(speler.sticks)"
+        
+        let kaartenString = " ".join(speler.kaarten.map { $0.description })
+        speler.position.down(1) >>> "\(kaartenString) \(speler.points)"
+      } else {
+        speler.position >>> "\(speler.name) DOOD"
       }
-      
-      speler.position >>> "\(speler.name)\(extraMessage) - \(speler.sticks)"
-      
-      let kaartenString = " ".join(speler.kaarten.map { $0.description })
-      speler.position.down(1) >>> "\(kaartenString) \(speler.points)"
     }
   }
   
@@ -324,7 +332,7 @@ class Game {
   }
   
   func shouldDoAnotherRound() -> Bool {
-    return pickDowners().count != (spelers.count - 1)
+    return pickDowners().count != (spelers.count - 1) && pickDowners().count != spelers.count
   }
   
   func resetBeurten() {
@@ -362,6 +370,7 @@ class Game {
     if shouldDoAnotherRound() && restart() {
       startGameRec(restartClosure, finishClosure: finishClosure)
     } else {
+      showFinishedState()
       if finishClosure?() ?? false {
         startGame(restartClosure, finishClosure: finishClosure)
       }

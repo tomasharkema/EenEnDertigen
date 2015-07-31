@@ -195,6 +195,31 @@ class GameTest: XCTestCase {
         Kaart(symbool: .Schoppen, nummer: .Heer),
         Kaart(symbool: .Harten, nummer: .Heer),
         Kaart(symbool: .Klaver, nummer: .Heer)
+        ], name: "Noord", sticks: 0, beurten: [], position: NoordPosition),
+      Speler(kaarten: [
+        Kaart(symbool: .Klaver, nummer: .Zeven),
+        Kaart(symbool: .Schoppen, nummer: .Negen),
+        Kaart(symbool: .Schoppen, nummer: .Aas)
+        ], name: "Oost", sticks: 0, beurten: [], position: OostPosition),
+      Speler(kaarten: [
+        Kaart(symbool: .Schoppen, nummer: .Tien),
+        Kaart(symbool: .Schoppen, nummer: .Boer),
+        Kaart(symbool: .Schoppen, nummer: .Zeven)
+        ], name: "Zuid", sticks: 0, beurten: [], position: ZuidPosition),
+      Speler(kaarten: [
+        Kaart(symbool: .Ruiten, nummer: .Boer),
+        Kaart(symbool: .Ruiten, nummer: .Heer),
+        Kaart(symbool: .Klaver, nummer: .Boer)
+        ], name: "West", sticks: 0, beurten: [], position: WestPosition)
+    ]
+    
+    XCTAssertFalse(game.shouldDoAnotherRound())
+    
+    game.spelers = [
+      Speler(kaarten: [
+        Kaart(symbool: .Schoppen, nummer: .Heer),
+        Kaart(symbool: .Harten, nummer: .Heer),
+        Kaart(symbool: .Klaver, nummer: .Heer)
         ], name: "Noord", sticks: 1, beurten: [], position: NoordPosition),
       Speler(kaarten: [
         Kaart(symbool: .Klaver, nummer: .Zeven),
