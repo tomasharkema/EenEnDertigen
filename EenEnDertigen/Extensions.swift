@@ -37,6 +37,40 @@ extension Array where Element: Equatable {
       el != element
     })
   }
+  
+  func without(el: Element) -> Array<Element> {
+    var newArray = Array<Element>()
+    
+    for obj in self {
+      if el != obj {
+        newArray.append(obj)
+      }
+    }
+    
+    return newArray
+  }
+  
+  func without(el: Array<Element>) -> Array<Element> {
+    var newArray = self
+    
+    for e in el {
+      newArray.remove(e)
+    }
+    
+    return newArray
+  }
+}
+
+extension Array where Element: Hashable {
+  func without(el: Set<Element>) -> Array<Element> {
+    var newArray = self
+    
+    for e in el {
+      newArray.remove(e)
+    }
+    
+    return newArray
+  }
 }
 
 extension Set where Element: Equatable {

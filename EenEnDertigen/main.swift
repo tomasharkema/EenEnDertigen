@@ -9,19 +9,38 @@
 import Foundation
 
 let game = Game()
-
-func startGame() {
-  game.start()
-  
+game.startGame({
   InputPosition >>> "Type 'r' om het spel te herstarten..."
-  
   let input = getKeyboardInput()
   if input == "r" {
     fflush(__stdoutp)
-    startGame()
+    return true
   } else {
-    exit(0)
+    return false
   }
-}
+}, finishClosure: {
+  InputPosition >>> "Einde!"
+  let input = getKeyboardInput()
+  if input == "r" {
+    fflush(__stdoutp)
+    return true
+  } else {
+    return false
+  }
+})
 
-startGame()
+//func startGame() {
+//  game.startRound()
+//  
+//  InputPosition >>> "Type 'r' om het spel te herstarten..."
+//  
+//  let input = getKeyboardInput()
+//  if input == "r" {
+//    fflush(__stdoutp)
+//    startGame()
+//  } else {
+//    exit(0)
+//  }
+//}
+//
+//startGame()

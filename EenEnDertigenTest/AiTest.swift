@@ -10,16 +10,6 @@ import XCTest
 
 class AiTest: XCTestCase {
 
-  override func setUp() {
-      super.setUp()
-      // Put setup code here. This method is called before the invocation of each test method in the class.
-  }
-  
-  override func tearDown() {
-      // Put teardown code here. This method is called after the invocation of each test method in the class.
-      super.tearDown()
-  }
-
   func testAiSwitch() {
     // ♥V ♣B ♠H
     let tafel: Tafel = [
@@ -32,7 +22,7 @@ class AiTest: XCTestCase {
       Kaart(symbool: .Harten, nummer: .Aas),
       Kaart(symbool: .Ruiten, nummer: .Negen),
       Kaart(symbool: .Ruiten, nummer: .Vrouw)],
-      name: "Test", beurten: [], position: NoordPosition)
+      name: "Test", sticks: 5, beurten: [], position: NoordPosition)
     
     let aiBeurt = AIbeurt(speler, tafel: tafel)
     
@@ -55,7 +45,7 @@ class AiTest: XCTestCase {
       Kaart(symbool: .Ruiten, nummer: .Aas),
       Kaart(symbool: .Ruiten, nummer: .Tien),
       Kaart(symbool: .Ruiten, nummer: .Negen)],
-      name: "Test", beurten: [], position: NoordPosition)
+      name: "Test", sticks: 5, beurten: [], position: NoordPosition)
     
     let aiBeurt = AIbeurt(speler, tafel: tafel)
     
@@ -74,18 +64,11 @@ class AiTest: XCTestCase {
       Kaart(symbool: .Harten, nummer: .Vrouw),
       Kaart(symbool: .Klaver, nummer: .Boer),
       Kaart(symbool: .Schoppen, nummer: .Heer)],
-      name: "Test", beurten: [], position: NoordPosition)
+      name: "Test", sticks: 5, beurten: [], position: NoordPosition)
     
     let aiBeurt = AIbeurt(speler, tafel: tafel)
     
     XCTAssertEqual(aiBeurt, Beurt.Wissel)
-  }
-
-  func testPerformanceExample() {
-      // This is an example of a performance test case.
-      self.measureBlock {
-          // Put the code you want to measure the time of here.
-      }
   }
 
 }

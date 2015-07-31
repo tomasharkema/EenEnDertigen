@@ -46,20 +46,21 @@ func calculatePoints(base: Kaart, additions: [Kaart]) -> Double {
 struct Speler: CustomStringConvertible, Equatable, Hashable {
   var kaarten: [Kaart]
   let name: String
+  var sticks: Int
   
   var points: Double {
     return [
       calculatePoints(kaarten[0], additions: [kaarten[1], kaarten[2]]),
       calculatePoints(kaarten[1], additions: [kaarten[0], kaarten[2]]),
       calculatePoints(kaarten[2], additions: [kaarten[0], kaarten[1]]),
-      ].reduce(0, combine: { max($0, $1) })
+    ].reduce(0, combine: { max($0, $1) })
   }
   
   func throwAndGrab(beurt: PossibleBeurt) -> Speler {
     var newKaarten = kaarten
     newKaarten.remove(beurt.throwKaart)
     newKaarten.append(beurt.grabKaart)
-    return Speler(kaarten: newKaarten, name: name, beurten: beurten, position: position)
+    return Speler(kaarten: newKaarten, name: name, sticks: sticks, beurten: beurten, position: position)
   }
   
   var description: String {
@@ -77,7 +78,7 @@ struct Speler: CustomStringConvertible, Equatable, Hashable {
     if let lastBeurt = beurten.last {
       switch lastBeurt {
       case let .Switch(possibleBeurt):
-        return "pakt: \(possibleBeurt.grabKaart.0), gooit: \(possibleBeurt.throwKaart.0)"
+        return "pakt: \(possibleBeurt.grabKaart), gooit: \(possibleBeurt.throwKaart)"
       case .Pass:
         return "Pas"
       case .Wissel:
@@ -86,6 +87,10 @@ struct Speler: CustomStringConvertible, Equatable, Hashable {
     } else {
       return ""
     }
+  }
+  
+  var isDowner: Bool {
+    return sticks == 0
   }
 }
 
@@ -122,7 +127,7 @@ class Game {
   
   var deck: Deck!
 
-  var spelers: [Speler]!
+  var spelers: Array<Speler>!
   var tafel: Tafel!
   
   // playState
@@ -133,12 +138,9 @@ class Game {
   }
   
   func deel() {
-    spelers = [
-      Speler(kaarten: [deck.draw(), deck.draw(), deck.draw()], name: "Zuid (JIJ)", beurten: [], position: ZuidPosition),
-      Speler(kaarten: [deck.draw(), deck.draw(), deck.draw()], name: "Oost", beurten: [], position: OostPosition),
-      Speler(kaarten: [deck.draw(), deck.draw(), deck.draw()], name: "Noord", beurten: [], position: NoordPosition),
-      Speler(kaarten: [deck.draw(), deck.draw(), deck.draw()], name: "West", beurten: [], position: WestPosition)
-    ]
+    for (index, _) in spelers.enumerate() {
+      spelers[index].kaarten = [deck.draw(), deck.draw(), deck.draw()]
+    }
     tafel = [deck.draw(), deck.draw(), deck.draw()]
   }
   
@@ -223,16 +225,20 @@ class Game {
       
       var speler: Speler!
       
-      if index == 0 && !Test {
-        speler = commitUserBeurt(spelers[index])
-      } else {
-        speler = commitBeurt(index, speler: spelers[index], beurt: AIbeurt(spelers[index], tafel: tafel))
-      }
+      if !spelers[index].isDowner {
       
-      spelers[index] = speler
-      printState()
-      if speler.points == 31 {
-        return
+        if index == 0 && !Test {
+          speler = commitUserBeurt(spelers[index])
+        } else {
+          speler = commitBeurt(index, speler: spelers[index], beurt: AIbeurt(spelers[index], tafel: tafel))
+        }
+        
+        spelers[index] = speler
+        printState()
+        if speler.points == 31 {
+          return
+        }
+        
       }
     }
     
@@ -248,10 +254,20 @@ class Game {
     TafelPosition >>> " ".join(tafel.map { $0.description })
     
     for speler in spelers {
-      speler.position >>> speler.name
-      speler.position.down(1) >>> speler.latestState
+      if !speler.isDowner {
+        speler.position >>> "\(speler.name) - \(speler.sticks)"
+        speler.position.down(1) >>> speler.latestState
+      }
     }
     
+  }
+  
+  func finishRound() {
+    for loser in pickLosers() {
+      if let index = spelers.indexOf(loser) {
+        spelers[index].sticks--
+      }
+    }
   }
   
   func printEndState() {
@@ -271,7 +287,7 @@ class Game {
         extraMessage = " - Verbied!"
       }
       
-      speler.position >>> "\(speler.name)\(extraMessage)"
+      speler.position >>> "\(speler.name)\(extraMessage) - \(speler.sticks)"
       
       let kaartenString = " ".join(speler.kaarten.map { $0.description })
       speler.position.down(1) >>> "\(kaartenString) \(speler.points)"
@@ -282,15 +298,17 @@ class Game {
     var losers = Set<Speler>()
     
     for speler in spelers {
-      if losers.count == 0 {
-        losers.insert(speler)
-      } else {
-        for loser in losers {
-          if speler.points < loser.points {
-            losers.removeAll()
-            losers.insert(speler)
-          } else if speler.points == loser.points {
-            losers.insert(speler)
+      if !speler.isDowner {
+        if losers.count == 0 {
+          losers.insert(speler)
+        } else {
+          for loser in losers {
+            if speler.points < loser.points {
+              losers.removeAll()
+              losers.insert(speler)
+            } else if speler.points == loser.points {
+              losers.insert(speler)
+            }
           }
         }
       }
@@ -299,17 +317,65 @@ class Game {
     return losers
   }
   
-  func start() {
+  func pickDowners() -> [Speler] {
+    return spelers.filter({ (el) -> Bool in
+      el.isDowner
+    })
+  }
+  
+  func shouldDoAnotherRound() -> Bool {
+    return pickDowners().count != (spelers.count - 1)
+  }
+  
+  func resetBeurten() {
+    for (index, _) in spelers.enumerate() {
+      spelers[index].beurten = []
+    }
+  }
+  
+  func startRound() {
+    
+    resetBeurten()
     
     // reset
     hasPassed = nil
     
     shuffle()
-    
     deel()
-    
     printState()
     beurt()
+    finishRound()
     printEndState()
+  }
+  
+  private func startGameRec(restartClosure: (() -> Bool)?, finishClosure: (() -> Bool)?) {
+    startRound()
+    
+    let restart: () -> Bool = {
+      if self.spelers[0].isDowner {
+        return true
+      } else {
+        return restartClosure?() ?? true
+      }
+    }
+    
+    if shouldDoAnotherRound() && restart() {
+      startGameRec(restartClosure, finishClosure: finishClosure)
+    } else {
+      if finishClosure?() ?? false {
+        startGame(restartClosure, finishClosure: finishClosure)
+      }
+    }
+  }
+  
+  func startGame(restartClosure: (() -> Bool)? = nil, finishClosure: (() -> Bool)? = nil) {
+    spelers = [
+      Speler(kaarten: [], name: "Zuid (JIJ)", sticks: 5, beurten: [], position: ZuidPosition),
+      Speler(kaarten: [], name: "Oost", sticks: 5, beurten: [], position: OostPosition),
+      Speler(kaarten: [], name: "Noord", sticks: 5, beurten: [], position: NoordPosition),
+      Speler(kaarten: [], name: "West", sticks: 5, beurten: [], position: WestPosition)
+    ]
+    
+    startGameRec(restartClosure, finishClosure: finishClosure)
   }
 }
