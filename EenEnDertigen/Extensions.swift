@@ -90,6 +90,23 @@ func flatten(el: [[String: Int]]) -> [String: Int] {
   return newDict
 }
 
+func flatten(elements: [[String: [String: Int]]]) -> [String: [String: Int]] {
+  var newDict = [String: [String: Int]]()
+  
+  for el in elements {
+    for (k, v) in el {
+      for (ke, ve) in v {
+        if newDict[k] == nil {
+          newDict[k] = [String: Int]()
+        }
+        newDict[k]![ke] = (newDict[k]![ke] ?? 0) + ve
+      }
+    }
+  }
+  
+  return newDict
+}
+
 extension Int {
   static func random(range: Range<Int> ) -> Int {
     var offset = 0
@@ -103,5 +120,11 @@ extension Int {
     let maxi = UInt32(range.endIndex   + offset)
     
     return Int(mini + arc4random_uniform(maxi - mini)) - offset
+  }
+}
+
+extension String {
+  func print() {
+    Swift.print(self)
   }
 }

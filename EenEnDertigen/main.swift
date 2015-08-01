@@ -21,7 +21,7 @@ if args.count > 1 {
 }
 
 if tournament {
-  Tournament(roundsPerGame: 20, startoffSticks: 5).playTournament()
+  Tournament(roundsPerGame: 10, startoffSticks: 5).playTournament()
 } else {
   let game = Game(shouldPrint: true)
   game.startGame(true, restartClosure: {

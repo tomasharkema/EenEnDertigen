@@ -15,7 +15,25 @@ struct PlayedGame {
     var playerAndScores = [String: Int]()
     
     for score in scores {
-      playerAndScores[score.winner().ai.dynamicType.algoName] = (playerAndScores[score.winner().ai.dynamicType.algoName] ?? 0) + 1
+      let winner = score.winner()
+      
+      playerAndScores[winner.0.ai.dynamicType.algoName] = (playerAndScores[winner.0.ai.dynamicType.algoName] ?? 0) + 1
+    }
+    
+    return playerAndScores
+  }
+  
+  func winningsFrom() -> [String: [String: Int]] {
+    var playerAndScores = [String: [String: Int]]()
+    
+    for score in scores {
+      let winner = score.winner()
+      var arr = [String: Int]()
+      for winn in winner.1 {
+        arr = playerAndScores[winner.0.ai.dynamicType.algoName] ?? [:]
+        arr[winn] = (arr[winn] ?? 0) + 1
+        playerAndScores[winner.0.ai.dynamicType.algoName] = arr
+      }
     }
     
     return playerAndScores
@@ -25,10 +43,12 @@ struct PlayedGame {
 struct Score {
   let spelers: [Speler]
   
-  func winner() -> Speler {
-    return spelers.maxElement {
+  func winner() -> (Speler, [String]) {
+    let winner = spelers.maxElement {
       $0.sticks < $1.sticks
     }!
+    
+    return (winner, spelers.without(winner).map { $0.ai.dynamicType.algoName })
   }
 }
 
@@ -61,9 +81,19 @@ class Tournament {
   }
   
   func playTournament() {
-    let AIs: [PlayerMove.Type] = [HighestPointsAvailableKeepHighCardsAI.self, HighestPointsAvailableAI.self, WisselBot.self, PassBot.self, RandomBot.self, HighestPointsPlusWisselAvailableAI.self]
+    let AIs: [PlayerMove.Type] = [
+      HighestPointsAvailableKeepHighCardsAI.self,
+      HighestPointsAvailableAI.self,
+      HighestPointsPlusWisselAbove25AI.self,
+      HighestPointsPlusWisselAbove20AI.self,
+      HighestPointsPlusWisselAvailableAI.self,
+      WisselBot.self,
+      PassBot.self,
+      RandomBot.self
+    ]
     
     var stats = SynchronizedArray<[String: Int]>()
+    var statsWinnings = SynchronizedArray<[String: [String: Int]]>()
     
     let dispatchGroup = dispatch_group_create()
     let dispatchQueue = dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)
@@ -85,7 +115,9 @@ class Tournament {
               let ais = [(ai1, "\(ai1.algoName) 1"), (ai2, "\(ai2.algoName) 2"), (ai3, "\(ai3.algoName) 3"), (ai4, "\(ai4.algoName) 4")]
               let res = self.peformanceOfAI(ais, gameId: potjeIndex)
               let winnings = res.winnigs()
+              
               stats.append(winnings)
+              statsWinnings.append(res.winningsFrom())
               
               let aisPrint = ais.map {
                 $0.1
@@ -105,10 +137,22 @@ class Tournament {
     
     print("\n\nSCORES: (potjes van \(roundsPerGame) gewonnen)\n")
     
-    print(scores.reduce("") { prev, el in
+    scores.reduce("") { prev, el in
       return prev + "\(el.0): \(el.1)\n"
+    }.print()
+    
+    //winnings from
+    print(flatten(statsWinnings.toArray()).reduce("Performance:\n") { prev, el in
+      
+      let ranks = el.1.sort { l, r in
+        l.1 > r.1
+      }.reduce("") { prev, el in
+        return prev + "     \(el.0): \(el.1)\n"
+      }
+      
+      return prev + "\(el.0): wint van\n\(ranks)\n"
     })
     
-    print("Tijd: \(watch.getLap())")
+    print("Tijd: \(watch.getLap())\n")
   }
 }

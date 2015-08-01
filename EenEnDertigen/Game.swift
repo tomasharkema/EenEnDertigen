@@ -9,9 +9,9 @@
 import Foundation
 
 func getKeyboardInput() -> String {
-  var keyboard = NSFileHandle.fileHandleWithStandardInput()
-  var inputData = keyboard.availableData
-  var strData = NSString(data: inputData, encoding: NSUTF8StringEncoding)!
+  let keyboard = NSFileHandle.fileHandleWithStandardInput()
+  let inputData = keyboard.availableData
+  let strData = NSString(data: inputData, encoding: NSUTF8StringEncoding)!
   
   return strData.stringByTrimmingCharactersInSet(NSCharacterSet.newlineCharacterSet()).lowercaseString
 }
@@ -91,14 +91,8 @@ func calculatePoints(base: Kaart, additions: [Kaart]) -> Punten {
   return .Punten(points)
 }
 
-var pointsCache = [Int: Punten]()
-
 struct Speler: CustomStringConvertible, Equatable, Hashable {
-  var kaarten: [Kaart] {
-    didSet {
-      pointsCache.removeValueForKey(name.hashValue)
-    }
-  }
+  var kaarten: [Kaart] 
   let name: String
   var sticks: Int
   var beurten: [Beurt]
@@ -175,6 +169,8 @@ func newDeck() -> Deck {
 
 typealias Tafel = [Kaart]
 
+var hashOfAi = SynchronizedDict<Int, String>()
+
 class Game {
   
   let shouldPrint: Bool
@@ -210,7 +206,6 @@ class Game {
   }
   
   func commitBeurt(spelerIndex: Int, var speler: Speler) -> Speler {
-    
     let beurt = speler.ai.move(speler, tafel: tafel)
     
     let count = speler.beurten.filter {$0 == beurt}.count
@@ -410,7 +405,7 @@ class Game {
       ]
     } else {
       if spelers == nil {
-        //print("WAT?")
+        assertionFailure("Spelers moeten gezet zijn!")
       }
     }
     

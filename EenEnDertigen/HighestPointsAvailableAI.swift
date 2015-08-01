@@ -108,7 +108,7 @@ class HighestPointsAvailableKeepHighCardsAI: PlayerMove {
       }
       
       let highIndex = tafel.indexOf { (el: Kaart) -> Bool in
-        el.nummer.points >= 9
+        el.nummer.points >= 10
       }
       
       if let highIndex = highIndex {
@@ -157,6 +157,78 @@ class HighestPointsPlusWisselAvailableAI: PlayerMove {
     
     let wisselPoints = calculatePoints(tafel[0], additions: tafel.without(tafel[0]))
     if wisselPoints > hand.points {
+      return .Wissel
+    } else if (hand.points > commitBeurt.1) {
+      return .Pass
+    } else {
+      return .Switch(commitBeurt.0)
+    }
+  }
+}
+
+class HighestPointsPlusWisselAbove25AI: PlayerMove {
+  
+  static let algoName = "HighestPointsPlusWisselAbove25AI"
+  
+  required init() {}
+  
+  func move(hand: Speler, tafel: Tafel) -> Beurt {
+    var possibleBeurten = [(PossibleBeurt, Punten)]()
+    
+    for tafelKaart in tafel {
+      for handKaart in hand.kaarten {
+        let additions = hand.kaarten.without(handKaart)
+        
+        possibleBeurten.append(
+          (PossibleBeurt(
+            throwKaart: handKaart,
+            grabKaart: tafelKaart), calculatePoints(tafelKaart, additions: additions))
+        )
+      }
+    }
+    
+    let commitBeurt = possibleBeurten.maxElement { (lhs, rhs) -> Bool in
+      lhs.1 < rhs.1
+    }!
+    
+    let wisselPoints = calculatePoints(tafel[0], additions: tafel.without(tafel[0]))
+    if wisselPoints > hand.points && wisselPoints.punten() > 25 {
+      return .Wissel
+    } else if (hand.points > commitBeurt.1) {
+      return .Pass
+    } else {
+      return .Switch(commitBeurt.0)
+    }
+  }
+}
+
+class HighestPointsPlusWisselAbove20AI: PlayerMove {
+  
+  static let algoName = "HighestPointsPlusWisselAbove20AI"
+  
+  required init() {}
+  
+  func move(hand: Speler, tafel: Tafel) -> Beurt {
+    var possibleBeurten = [(PossibleBeurt, Punten)]()
+    
+    for tafelKaart in tafel {
+      for handKaart in hand.kaarten {
+        let additions = hand.kaarten.without(handKaart)
+        
+        possibleBeurten.append(
+          (PossibleBeurt(
+            throwKaart: handKaart,
+            grabKaart: tafelKaart), calculatePoints(tafelKaart, additions: additions))
+        )
+      }
+    }
+    
+    let commitBeurt = possibleBeurten.maxElement { (lhs, rhs) -> Bool in
+      lhs.1 < rhs.1
+      }!
+    
+    let wisselPoints = calculatePoints(tafel[0], additions: tafel.without(tafel[0]))
+    if wisselPoints > hand.points && wisselPoints.punten() > 20 {
       return .Wissel
     } else if (hand.points > commitBeurt.1) {
       return .Pass

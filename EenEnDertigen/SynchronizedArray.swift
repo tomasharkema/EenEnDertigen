@@ -51,6 +51,57 @@ class SynchronizedArray<T> {
   }
 }
 
+class SynchronizedDict<K: Hashable, V: Equatable> {
+  private var dict: [K: V] = [K:V]()
+  private let accessQueue = dispatch_queue_create(nil, DISPATCH_QUEUE_SERIAL)
+  
+  init () {}
+  init (el: [K: V]) {
+    dict = el
+  }
+  
+//  func append(newElement: ) {
+//    dispatch_async(accessQueue) {
+//      self.array.append(newElement)
+//    }
+//  }
+  
+  subscript(index: K) -> V? {
+    set {
+      
+      var trough = true
+      if self[index] == newValue {
+        trough = false
+      }
+      
+      if trough {
+        dispatch_async(self.accessQueue) {
+          self.dict[index] = newValue
+        }
+      }
+    }
+    get {
+      var element: V?
+      
+      dispatch_sync(self.accessQueue) {
+        element = self.dict[index]
+      }
+      
+      return element
+    }
+  }
+  
+  func toDict() -> [K: V] {
+    var dict: [K: V] = [K: V]()
+    
+    dispatch_sync(accessQueue) {
+      dict = self.dict
+    }
+    
+    return dict
+  }
+}
+
 extension Array {
   func toSyncedArray() -> SynchronizedArray<Element> {
     return SynchronizedArray(el: self)
