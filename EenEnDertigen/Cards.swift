@@ -8,18 +8,31 @@
 
 import Foundation
 
-enum Symbool: Character {
-  case Ruiten = "♣"
-  case Schoppen = "♠"
-  case Klaver = "♦"
-  case Harten = "♥"
+enum Symbool {
+  case Ruiten
+  case Schoppen
+  case Klaver
+  case Harten
   
   var color: Color {
     switch self {
-    case .Ruiten, .Schoppen:
+    case .Klaver, .Schoppen:
       return .Black
-    case .Klaver, .Harten:
+    case .Ruiten, .Harten:
       return .Red
+    }
+  }
+  
+  var string: String {
+    switch self {
+    case .Ruiten:
+      return "♦"
+    case .Schoppen:
+      return "♠"
+    case .Klaver:
+      return "♣"
+    case .Harten:
+      return "♥"
     }
   }
 }
@@ -31,15 +44,36 @@ struct Variant {
   let punt: Int
 }
 
-enum Nummer: String {
-  case Aas = "A"
-  case Heer = "H"
-  case Vrouw = "V"
-  case Boer = "B"
-  case Tien = "10"
-  case Negen = "9"
-  case Acht = "8"
-  case Zeven = "7"
+enum Nummer {
+  case Aas
+  case Heer
+  case Vrouw
+  case Boer
+  case Tien
+  case Negen
+  case Acht
+  case Zeven
+  
+  var string: String {
+    switch self {
+    case .Aas:
+      return "A"
+    case .Heer:
+      return "H"
+    case .Vrouw:
+      return "V"
+    case .Boer:
+      return "B"
+    case .Tien:
+      return "10"
+    case .Negen:
+      return "9"
+    case .Acht:
+      return "8"
+    case .Zeven:
+      return "7"
+    }
+  }
   
   var points: Int {
     switch self {
@@ -47,25 +81,42 @@ enum Nummer: String {
       return 11
     case .Heer, .Vrouw, .Boer, .Tien:
       return 10
-    default:
-      return Int(self.rawValue)!
+    case .Negen:
+      return 9
+    case .Acht:
+      return 8
+    case .Zeven:
+      return 7
     }
   }
 }
 
 let AllNummers: [Nummer] = [.Aas, .Heer, .Vrouw, .Boer, .Tien, .Negen, .Acht, .Zeven]
 
-struct Kaart: CustomStringConvertible, Equatable {
+struct Kaart: CustomStringConvertible, Equatable, Comparable {
   let symbool: Symbool
   let nummer: Nummer
   
   var description: String {
     let color = symbool.color
     
-    return color >>> "\(symbool.rawValue)\(nummer.rawValue)"
+    return color >>> "\(symbool.string)\(nummer.string)"
   }
 }
 
 func ==(lhs: Kaart, rhs: Kaart) -> Bool {
   return lhs.nummer == rhs.nummer && lhs.symbool == rhs.symbool
+}
+
+func >(lhs: Kaart, rhs: Kaart) -> Bool {
+  return lhs.nummer.points > rhs.nummer.points
+}
+func <(lhs: Kaart, rhs: Kaart) -> Bool {
+  return lhs.nummer.points < rhs.nummer.points
+}
+func >=(lhs: Kaart, rhs: Kaart) -> Bool {
+  return lhs.nummer.points >= rhs.nummer.points
+}
+func <=(lhs: Kaart, rhs: Kaart) -> Bool {
+  return lhs.nummer.points <= rhs.nummer.points
 }

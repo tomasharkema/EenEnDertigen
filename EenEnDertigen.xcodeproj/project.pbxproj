@@ -22,8 +22,21 @@
 		C35064611B5BFDBA00DD1EAD /* CLI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35064601B5BFDBA00DD1EAD /* CLI.swift */; };
 		C35064621B5C02C200DD1EAD /* Positions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C350645E1B5BF8DF00DD1EAD /* Positions.swift */; };
 		C35064631B5C02C600DD1EAD /* CLI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35064601B5BFDBA00DD1EAD /* CLI.swift */; };
-		C35064651B5D4CC700DD1EAD /* AiTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35064641B5D4CC700DD1EAD /* AiTest.swift */; };
+		C35064651B5D4CC700DD1EAD /* HighestPointsAvailableAITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35064641B5D4CC700DD1EAD /* HighestPointsAvailableAITest.swift */; };
 		C35064671B5D538000DD1EAD /* ExtensionTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35064661B5D538000DD1EAD /* ExtensionTest.swift */; };
+		C35A0AAF1B6B96C700D4F451 /* HighestPointsAvailableAI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35A0AAE1B6B96C700D4F451 /* HighestPointsAvailableAI.swift */; };
+		C35A0AB11B6B97F800D4F451 /* UserInputAI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35A0AB01B6B97F800D4F451 /* UserInputAI.swift */; };
+		C35A0AB31B6B9DC900D4F451 /* Tournament.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35A0AB21B6B9DC900D4F451 /* Tournament.swift */; };
+		C35A0AB51B6BA8DD00D4F451 /* MiscAi.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35A0AB41B6BA8DD00D4F451 /* MiscAi.swift */; };
+		C35A0AB71B6BB9E200D4F451 /* SynchronizedArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35A0AB61B6BB9E200D4F451 /* SynchronizedArray.swift */; };
+		C35A0AB91B6CDCA400D4F451 /* StopWatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35A0AB81B6CDCA400D4F451 /* StopWatch.swift */; };
+		C35A0ABA1B6CE03A00D4F451 /* Tournament.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35A0AB21B6B9DC900D4F451 /* Tournament.swift */; };
+		C3C8568E1B6D0F06007C683B /* StopWatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35A0AB81B6CDCA400D4F451 /* StopWatch.swift */; };
+		C3C856901B6D25CD007C683B /* TournamentTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C8568F1B6D25CD007C683B /* TournamentTest.swift */; };
+		C3ED81DC1B6CE29200A0B5E0 /* MiscAi.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35A0AB41B6BA8DD00D4F451 /* MiscAi.swift */; };
+		C3ED81DD1B6CE31F00A0B5E0 /* HighestPointsAvailableAI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35A0AAE1B6B96C700D4F451 /* HighestPointsAvailableAI.swift */; };
+		C3ED81DE1B6CE33200A0B5E0 /* UserInputAI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35A0AB01B6B97F800D4F451 /* UserInputAI.swift */; };
+		C3ED81DF1B6CE37500A0B5E0 /* SynchronizedArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35A0AB61B6BB9E200D4F451 /* SynchronizedArray.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -50,8 +63,15 @@
 		C350645B1B5BF1CC00DD1EAD /* GameTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameTest.swift; sourceTree = "<group>"; };
 		C350645E1B5BF8DF00DD1EAD /* Positions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Positions.swift; sourceTree = "<group>"; };
 		C35064601B5BFDBA00DD1EAD /* CLI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CLI.swift; sourceTree = "<group>"; };
-		C35064641B5D4CC700DD1EAD /* AiTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AiTest.swift; sourceTree = "<group>"; };
+		C35064641B5D4CC700DD1EAD /* HighestPointsAvailableAITest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HighestPointsAvailableAITest.swift; sourceTree = "<group>"; };
 		C35064661B5D538000DD1EAD /* ExtensionTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtensionTest.swift; sourceTree = "<group>"; };
+		C35A0AAE1B6B96C700D4F451 /* HighestPointsAvailableAI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HighestPointsAvailableAI.swift; sourceTree = "<group>"; };
+		C35A0AB01B6B97F800D4F451 /* UserInputAI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInputAI.swift; sourceTree = "<group>"; };
+		C35A0AB21B6B9DC900D4F451 /* Tournament.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tournament.swift; sourceTree = "<group>"; };
+		C35A0AB41B6BA8DD00D4F451 /* MiscAi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiscAi.swift; sourceTree = "<group>"; };
+		C35A0AB61B6BB9E200D4F451 /* SynchronizedArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SynchronizedArray.swift; sourceTree = "<group>"; };
+		C35A0AB81B6CDCA400D4F451 /* StopWatch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StopWatch.swift; sourceTree = "<group>"; };
+		C3C8568F1B6D25CD007C683B /* TournamentTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TournamentTest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +113,7 @@
 		C35064361B5A91B500DD1EAD /* EenEnDertigen */ = {
 			isa = PBXGroup;
 			children = (
+				C35A0AB41B6BA8DD00D4F451 /* MiscAi.swift */,
 				C35064421B5A922900DD1EAD /* Game.swift */,
 				C35064371B5A91B500DD1EAD /* main.swift */,
 				C350643E1B5A91E300DD1EAD /* Cards.swift */,
@@ -100,6 +121,11 @@
 				C35064461B5A9B2B00DD1EAD /* Ai.swift */,
 				C350645E1B5BF8DF00DD1EAD /* Positions.swift */,
 				C35064601B5BFDBA00DD1EAD /* CLI.swift */,
+				C35A0AAE1B6B96C700D4F451 /* HighestPointsAvailableAI.swift */,
+				C35A0AB01B6B97F800D4F451 /* UserInputAI.swift */,
+				C35A0AB21B6B9DC900D4F451 /* Tournament.swift */,
+				C35A0AB61B6BB9E200D4F451 /* SynchronizedArray.swift */,
+				C35A0AB81B6CDCA400D4F451 /* StopWatch.swift */,
 			);
 			path = EenEnDertigen;
 			sourceTree = "<group>";
@@ -109,8 +135,9 @@
 			children = (
 				C350645B1B5BF1CC00DD1EAD /* GameTest.swift */,
 				C35064521B5BE41600DD1EAD /* Info.plist */,
-				C35064641B5D4CC700DD1EAD /* AiTest.swift */,
+				C35064641B5D4CC700DD1EAD /* HighestPointsAvailableAITest.swift */,
 				C35064661B5D538000DD1EAD /* ExtensionTest.swift */,
+				C3C8568F1B6D25CD007C683B /* TournamentTest.swift */,
 			);
 			path = EenEnDertigenTest;
 			sourceTree = "<group>";
@@ -202,12 +229,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C35A0AB91B6CDCA400D4F451 /* StopWatch.swift in Sources */,
+				C35A0AB51B6BA8DD00D4F451 /* MiscAi.swift in Sources */,
+				C35A0AB71B6BB9E200D4F451 /* SynchronizedArray.swift in Sources */,
 				C35064381B5A91B500DD1EAD /* main.swift in Sources */,
 				C35064431B5A922900DD1EAD /* Game.swift in Sources */,
 				C350643F1B5A91E300DD1EAD /* Cards.swift in Sources */,
 				C35064611B5BFDBA00DD1EAD /* CLI.swift in Sources */,
 				C35064471B5A9B2B00DD1EAD /* Ai.swift in Sources */,
+				C35A0AB31B6B9DC900D4F451 /* Tournament.swift in Sources */,
+				C35A0AAF1B6B96C700D4F451 /* HighestPointsAvailableAI.swift in Sources */,
 				C350645F1B5BF8DF00DD1EAD /* Positions.swift in Sources */,
+				C35A0AB11B6B97F800D4F451 /* UserInputAI.swift in Sources */,
 				C35064451B5A950800DD1EAD /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -216,15 +249,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C3ED81DD1B6CE31F00A0B5E0 /* HighestPointsAvailableAI.swift in Sources */,
 				C35064581B5BE47B00DD1EAD /* Cards.swift in Sources */,
+				C3ED81DC1B6CE29200A0B5E0 /* MiscAi.swift in Sources */,
+				C3C856901B6D25CD007C683B /* TournamentTest.swift in Sources */,
 				C35064621B5C02C200DD1EAD /* Positions.swift in Sources */,
+				C3ED81DF1B6CE37500A0B5E0 /* SynchronizedArray.swift in Sources */,
 				C35064571B5BE47300DD1EAD /* Game.swift in Sources */,
 				C350645D1B5BF3AA00DD1EAD /* main.swift in Sources */,
+				C3C8568E1B6D0F06007C683B /* StopWatch.swift in Sources */,
 				C35064631B5C02C600DD1EAD /* CLI.swift in Sources */,
+				C35A0ABA1B6CE03A00D4F451 /* Tournament.swift in Sources */,
 				C35064671B5D538000DD1EAD /* ExtensionTest.swift in Sources */,
+				C3ED81DE1B6CE33200A0B5E0 /* UserInputAI.swift in Sources */,
 				C350645C1B5BF1CC00DD1EAD /* GameTest.swift in Sources */,
 				C350645A1B5BE48000DD1EAD /* Ai.swift in Sources */,
-				C35064651B5D4CC700DD1EAD /* AiTest.swift in Sources */,
+				C35064651B5D4CC700DD1EAD /* HighestPointsAvailableAITest.swift in Sources */,
 				C35064591B5BE47E00DD1EAD /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

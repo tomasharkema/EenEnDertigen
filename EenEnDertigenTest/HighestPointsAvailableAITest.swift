@@ -8,7 +8,7 @@
 
 import XCTest
 
-class AiTest: XCTestCase {
+class HighestPointsAvailableAITest: XCTestCase {
 
   func testAiSwitch() {
     // ♥V ♣B ♠H
@@ -22,15 +22,15 @@ class AiTest: XCTestCase {
       Kaart(symbool: .Harten, nummer: .Aas),
       Kaart(symbool: .Ruiten, nummer: .Negen),
       Kaart(symbool: .Ruiten, nummer: .Vrouw)],
-      name: "Test", sticks: 5, beurten: [], position: NoordPosition)
+      name: "Test", sticks: 5, beurten: [], position: NoordPosition, ai: HighestPointsAvailableAI())
     
-    let aiBeurt = AIbeurt(speler, tafel: tafel)
+    let aiBeurt = speler.ai.move(speler, tafel: tafel)
     
     XCTAssertEqual(aiBeurt, Beurt.Switch(
       PossibleBeurt(
         throwKaart: Kaart(symbool: .Ruiten, nummer: .Negen),
         grabKaart: Kaart(symbool: .Harten, nummer: .Vrouw),
-        points: 21)))
+        points: Punten.Punten(21))))
   }
   
   func testAiPass() {
@@ -45,9 +45,9 @@ class AiTest: XCTestCase {
       Kaart(symbool: .Ruiten, nummer: .Aas),
       Kaart(symbool: .Ruiten, nummer: .Tien),
       Kaart(symbool: .Ruiten, nummer: .Negen)],
-      name: "Test", sticks: 5, beurten: [], position: NoordPosition)
+      name: "Test", sticks: 5, beurten: [], position: NoordPosition, ai: HighestPointsAvailableAI())
     
-    let aiBeurt = AIbeurt(speler, tafel: tafel)
+    let aiBeurt = speler.ai.move(speler, tafel: tafel)
     
     XCTAssertEqual(aiBeurt, Beurt.Pass)
   }
@@ -64,9 +64,9 @@ class AiTest: XCTestCase {
       Kaart(symbool: .Harten, nummer: .Vrouw),
       Kaart(symbool: .Klaver, nummer: .Boer),
       Kaart(symbool: .Schoppen, nummer: .Heer)],
-      name: "Test", sticks: 5, beurten: [], position: NoordPosition)
+      name: "Test", sticks: 5, beurten: [], position: NoordPosition, ai: HighestPointsAvailableAI())
     
-    let aiBeurt = AIbeurt(speler, tafel: tafel)
+    let aiBeurt = speler.ai.move(speler, tafel: tafel)
     
     XCTAssertEqual(aiBeurt, Beurt.Wissel)
   }

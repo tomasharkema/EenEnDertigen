@@ -7,3 +7,17 @@
 //
 
 import Foundation
+
+class StopWatch {
+  private var startDate: NSDate!
+  
+  init() {}
+  
+  func start() {
+    startDate = NSDate()
+  }
+  
+  func getLap() -> Double {
+    return abs(startDate.timeIntervalSinceNow)
+  }
+}

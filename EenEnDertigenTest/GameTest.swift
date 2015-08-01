@@ -14,7 +14,7 @@ class GameTest: XCTestCase {
   
   override func setUp() {
     super.setUp()
-    game = Game()
+    game = Game(shouldPrint: false)
   }
   
   override func tearDown() {
@@ -34,22 +34,22 @@ class GameTest: XCTestCase {
         Kaart(symbool: .Schoppen, nummer: .Boer),
         Kaart(symbool: .Schoppen, nummer: .Tien),
         Kaart(symbool: .Klaver, nummer: .Tien)
-      ], name: "Noord", sticks: 5, beurten: [], position: NoordPosition),
+      ], name: "Noord", sticks: 5, beurten: [], position: NoordPosition, ai: WisselBot()),
       Speler(kaarten: [
         Kaart(symbool: .Harten, nummer: .Aas),
         Kaart(symbool: .Harten, nummer: .Negen),
         Kaart(symbool: .Harten, nummer: .Tien)
-      ], name: "Oost", sticks: 5, beurten: [], position: OostPosition),
+      ], name: "Oost", sticks: 5, beurten: [], position: OostPosition, ai: WisselBot()),
       Speler(kaarten: [
         Kaart(symbool: .Klaver, nummer: .Negen),
         Kaart(symbool: .Harten, nummer: .Boer),
         Kaart(symbool: .Klaver, nummer: .Aas)
-      ], name: "Zuid", sticks: 5, beurten: [], position: ZuidPosition),
+      ], name: "Zuid", sticks: 5, beurten: [], position: ZuidPosition, ai: WisselBot()),
       Speler(kaarten: [
         Kaart(symbool: .Schoppen, nummer: .Negen),
         Kaart(symbool: .Klaver, nummer: .Boer),
         Kaart(symbool: .Harten, nummer: .Zeven)
-      ], name: "West", sticks: 5, beurten: [], position: WestPosition)
+      ], name: "West", sticks: 5, beurten: [], position: WestPosition, ai: WisselBot())
     ]
     
     XCTAssertEqual(game.pickLosers(), [game.spelers[3]])
@@ -57,7 +57,7 @@ class GameTest: XCTestCase {
 
   func testPickLosersDoubles() {
     
-    let game = Game()
+    let game = Game(shouldPrint: false)
     
     //Speler Noord: [♠H, ♥H, ♣H] 30.5
     //Speler Oost: [♣7, ♠9, ♠A] 20.0
@@ -69,22 +69,22 @@ class GameTest: XCTestCase {
         Kaart(symbool: .Schoppen, nummer: .Heer),
         Kaart(symbool: .Harten, nummer: .Heer),
         Kaart(symbool: .Klaver, nummer: .Heer)
-      ], name: "Noord", sticks: 5, beurten: [], position: NoordPosition),
+      ], name: "Noord", sticks: 5, beurten: [], position: NoordPosition, ai: WisselBot()),
       Speler(kaarten: [
         Kaart(symbool: .Klaver, nummer: .Zeven),
         Kaart(symbool: .Schoppen, nummer: .Negen),
         Kaart(symbool: .Schoppen, nummer: .Aas)
-      ], name: "Oost", sticks: 5, beurten: [], position: OostPosition),
+      ], name: "Oost", sticks: 5, beurten: [], position: OostPosition, ai: WisselBot()),
       Speler(kaarten: [
         Kaart(symbool: .Schoppen, nummer: .Tien),
         Kaart(symbool: .Schoppen, nummer: .Boer),
         Kaart(symbool: .Schoppen, nummer: .Zeven)
-      ], name: "Zuid", sticks: 5, beurten: [], position: ZuidPosition),
+      ], name: "Zuid", sticks: 5, beurten: [], position: ZuidPosition, ai: WisselBot()),
       Speler(kaarten: [
         Kaart(symbool: .Ruiten, nummer: .Boer),
         Kaart(symbool: .Ruiten, nummer: .Heer),
         Kaart(symbool: .Klaver, nummer: .Boer)
-      ], name: "West", sticks: 5, beurten: [], position: WestPosition)
+      ], name: "West", sticks: 5, beurten: [], position: WestPosition, ai: WisselBot())
     ]
     
     XCTAssertEqual(game.pickLosers(), [game.spelers[1], game.spelers[3]])
@@ -96,9 +96,9 @@ class GameTest: XCTestCase {
       Kaart(symbool: .Schoppen, nummer: .Aas),
       Kaart(symbool: .Schoppen, nummer: .Heer),
       Kaart(symbool: .Schoppen, nummer: .Vrouw)
-    ], name: "Test ", sticks: 5, beurten: [], position: NoordPosition)
+    ], name: "Test ", sticks: 5, beurten: [], position: NoordPosition, ai: WisselBot())
     
-    XCTAssertEqual(speler.points, 31)
+    XCTAssertEqual(speler.points, .Verbied)
   }
   
   func testDertigHalf() {
@@ -107,9 +107,9 @@ class GameTest: XCTestCase {
       Kaart(symbool: .Schoppen, nummer: .Vrouw),
       Kaart(symbool: .Klaver, nummer: .Vrouw),
       Kaart(symbool: .Ruiten, nummer: .Vrouw)
-    ], name: "Test", sticks: 5, beurten: [], position: NoordPosition)
+    ], name: "Test", sticks: 5, beurten: [], position: NoordPosition, ai: WisselBot())
     
-    XCTAssertEqual(speler.points, 30.5)
+    XCTAssertEqual(speler.points, .DertigHalf)
   }
   
   func testDrieEnDertig() {
@@ -118,13 +118,13 @@ class GameTest: XCTestCase {
       Kaart(symbool: .Schoppen, nummer: .Aas),
       Kaart(symbool: .Klaver, nummer: .Aas),
       Kaart(symbool: .Ruiten, nummer: .Aas)
-    ], name: "Test", sticks: 5, beurten: [], position: NoordPosition)
+    ], name: "Test", sticks: 5, beurten: [], position: NoordPosition, ai: WisselBot())
     
-    XCTAssertEqual(speler.points, 33)
+    XCTAssertEqual(speler.points, .AasVerbied)
   }
   
   func testUniqueDeck() {
-    let game = Game()
+    let game = Game(shouldPrint: false)
     game.shuffle()
     
     var crossReference = [Kaart]()
@@ -143,7 +143,7 @@ class GameTest: XCTestCase {
   
   func testDeckDraw() {
     
-    let game = Game()
+    let game = Game(shouldPrint: false)
     game.shuffle()
     
     let firstCard = game.deck.cards.first!
@@ -160,22 +160,22 @@ class GameTest: XCTestCase {
         Kaart(symbool: .Schoppen, nummer: .Boer),
         Kaart(symbool: .Schoppen, nummer: .Tien),
         Kaart(symbool: .Klaver, nummer: .Tien)
-        ], name: "Noord", sticks: 5, beurten: [], position: NoordPosition),
+        ], name: "Noord", sticks: 5, beurten: [], position: NoordPosition, ai: HighestPointsAvailableAI()),
       Speler(kaarten: [
         Kaart(symbool: .Harten, nummer: .Aas),
         Kaart(symbool: .Harten, nummer: .Negen),
         Kaart(symbool: .Harten, nummer: .Tien)
-        ], name: "Oost", sticks: 5, beurten: [], position: OostPosition),
+        ], name: "Oost", sticks: 5, beurten: [], position: OostPosition, ai: HighestPointsAvailableAI()),
       Speler(kaarten: [
         Kaart(symbool: .Klaver, nummer: .Negen),
         Kaart(symbool: .Harten, nummer: .Boer),
         Kaart(symbool: .Klaver, nummer: .Aas)
-        ], name: "Zuid", sticks: 5, beurten: [], position: ZuidPosition),
+        ], name: "Zuid", sticks: 5, beurten: [], position: ZuidPosition, ai: HighestPointsAvailableAI()),
       Speler(kaarten: [
         Kaart(symbool: .Schoppen, nummer: .Negen),
         Kaart(symbool: .Klaver, nummer: .Boer),
         Kaart(symbool: .Harten, nummer: .Zeven)
-        ], name: "West", sticks: 5, beurten: [], position: WestPosition)
+        ], name: "West", sticks: 5, beurten: [], position: WestPosition, ai: HighestPointsAvailableAI())
     ]
     
     game.startRound()
@@ -195,22 +195,22 @@ class GameTest: XCTestCase {
         Kaart(symbool: .Schoppen, nummer: .Heer),
         Kaart(symbool: .Harten, nummer: .Heer),
         Kaart(symbool: .Klaver, nummer: .Heer)
-        ], name: "Noord", sticks: 0, beurten: [], position: NoordPosition),
+        ], name: "Noord", sticks: 0, beurten: [], position: NoordPosition, ai: HighestPointsAvailableAI()),
       Speler(kaarten: [
         Kaart(symbool: .Klaver, nummer: .Zeven),
         Kaart(symbool: .Schoppen, nummer: .Negen),
         Kaart(symbool: .Schoppen, nummer: .Aas)
-        ], name: "Oost", sticks: 0, beurten: [], position: OostPosition),
+        ], name: "Oost", sticks: 0, beurten: [], position: OostPosition, ai: HighestPointsAvailableAI()),
       Speler(kaarten: [
         Kaart(symbool: .Schoppen, nummer: .Tien),
         Kaart(symbool: .Schoppen, nummer: .Boer),
         Kaart(symbool: .Schoppen, nummer: .Zeven)
-        ], name: "Zuid", sticks: 0, beurten: [], position: ZuidPosition),
+        ], name: "Zuid", sticks: 0, beurten: [], position: ZuidPosition, ai: HighestPointsAvailableAI()),
       Speler(kaarten: [
         Kaart(symbool: .Ruiten, nummer: .Boer),
         Kaart(symbool: .Ruiten, nummer: .Heer),
         Kaart(symbool: .Klaver, nummer: .Boer)
-        ], name: "West", sticks: 0, beurten: [], position: WestPosition)
+        ], name: "West", sticks: 0, beurten: [], position: WestPosition, ai: HighestPointsAvailableAI())
     ]
     
     XCTAssertFalse(game.shouldDoAnotherRound())
@@ -220,22 +220,22 @@ class GameTest: XCTestCase {
         Kaart(symbool: .Schoppen, nummer: .Heer),
         Kaart(symbool: .Harten, nummer: .Heer),
         Kaart(symbool: .Klaver, nummer: .Heer)
-        ], name: "Noord", sticks: 1, beurten: [], position: NoordPosition),
+        ], name: "Noord", sticks: 1, beurten: [], position: NoordPosition, ai: HighestPointsAvailableAI()),
       Speler(kaarten: [
         Kaart(symbool: .Klaver, nummer: .Zeven),
         Kaart(symbool: .Schoppen, nummer: .Negen),
         Kaart(symbool: .Schoppen, nummer: .Aas)
-        ], name: "Oost", sticks: 0, beurten: [], position: OostPosition),
+        ], name: "Oost", sticks: 0, beurten: [], position: OostPosition, ai: HighestPointsAvailableAI()),
       Speler(kaarten: [
         Kaart(symbool: .Schoppen, nummer: .Tien),
         Kaart(symbool: .Schoppen, nummer: .Boer),
         Kaart(symbool: .Schoppen, nummer: .Zeven)
-        ], name: "Zuid", sticks: 0, beurten: [], position: ZuidPosition),
+        ], name: "Zuid", sticks: 0, beurten: [], position: ZuidPosition, ai: HighestPointsAvailableAI()),
       Speler(kaarten: [
         Kaart(symbool: .Ruiten, nummer: .Boer),
         Kaart(symbool: .Ruiten, nummer: .Heer),
         Kaart(symbool: .Klaver, nummer: .Boer)
-        ], name: "West", sticks: 0, beurten: [], position: WestPosition)
+        ], name: "West", sticks: 0, beurten: [], position: WestPosition, ai: HighestPointsAvailableAI())
     ]
     
     XCTAssertFalse(game.shouldDoAnotherRound())
@@ -245,22 +245,22 @@ class GameTest: XCTestCase {
         Kaart(symbool: .Schoppen, nummer: .Heer),
         Kaart(symbool: .Harten, nummer: .Heer),
         Kaart(symbool: .Klaver, nummer: .Heer)
-        ], name: "Noord", sticks: 1, beurten: [], position: NoordPosition),
+        ], name: "Noord", sticks: 1, beurten: [], position: NoordPosition, ai: HighestPointsAvailableAI()),
       Speler(kaarten: [
         Kaart(symbool: .Klaver, nummer: .Zeven),
         Kaart(symbool: .Schoppen, nummer: .Negen),
         Kaart(symbool: .Schoppen, nummer: .Aas)
-        ], name: "Oost", sticks: 1, beurten: [], position: OostPosition),
+        ], name: "Oost", sticks: 1, beurten: [], position: OostPosition, ai: HighestPointsAvailableAI()),
       Speler(kaarten: [
         Kaart(symbool: .Schoppen, nummer: .Tien),
         Kaart(symbool: .Schoppen, nummer: .Boer),
         Kaart(symbool: .Schoppen, nummer: .Zeven)
-        ], name: "Zuid", sticks: 0, beurten: [], position: ZuidPosition),
+        ], name: "Zuid", sticks: 0, beurten: [], position: ZuidPosition, ai: HighestPointsAvailableAI()),
       Speler(kaarten: [
         Kaart(symbool: .Ruiten, nummer: .Boer),
         Kaart(symbool: .Ruiten, nummer: .Heer),
         Kaart(symbool: .Klaver, nummer: .Boer)
-        ], name: "West", sticks: 0, beurten: [], position: WestPosition)
+        ], name: "West", sticks: 0, beurten: [], position: WestPosition, ai: HighestPointsAvailableAI())
     ]
     
     XCTAssertTrue(game.shouldDoAnotherRound())
@@ -270,22 +270,22 @@ class GameTest: XCTestCase {
         Kaart(symbool: .Schoppen, nummer: .Heer),
         Kaart(symbool: .Harten, nummer: .Heer),
         Kaart(symbool: .Klaver, nummer: .Heer)
-        ], name: "Noord", sticks: 4, beurten: [], position: NoordPosition),
+        ], name: "Noord", sticks: 4, beurten: [], position: NoordPosition, ai: HighestPointsAvailableAI()),
       Speler(kaarten: [
         Kaart(symbool: .Klaver, nummer: .Zeven),
         Kaart(symbool: .Schoppen, nummer: .Negen),
         Kaart(symbool: .Schoppen, nummer: .Aas)
-        ], name: "Oost", sticks: 4, beurten: [], position: OostPosition),
+        ], name: "Oost", sticks: 4, beurten: [], position: OostPosition, ai: HighestPointsAvailableAI()),
       Speler(kaarten: [
         Kaart(symbool: .Schoppen, nummer: .Tien),
         Kaart(symbool: .Schoppen, nummer: .Boer),
         Kaart(symbool: .Schoppen, nummer: .Zeven)
-        ], name: "Zuid", sticks: 4, beurten: [], position: ZuidPosition),
+        ], name: "Zuid", sticks: 4, beurten: [], position: ZuidPosition, ai: HighestPointsAvailableAI()),
       Speler(kaarten: [
         Kaart(symbool: .Ruiten, nummer: .Boer),
         Kaart(symbool: .Ruiten, nummer: .Heer),
         Kaart(symbool: .Klaver, nummer: .Boer)
-        ], name: "West", sticks: 0, beurten: [], position: WestPosition)
+        ], name: "West", sticks: 0, beurten: [], position: WestPosition, ai: HighestPointsAvailableAI())
     ]
     
     XCTAssertTrue(game.shouldDoAnotherRound())
@@ -295,29 +295,29 @@ class GameTest: XCTestCase {
         Kaart(symbool: .Schoppen, nummer: .Heer),
         Kaart(symbool: .Harten, nummer: .Heer),
         Kaart(symbool: .Klaver, nummer: .Heer)
-        ], name: "Noord", sticks: 4, beurten: [], position: NoordPosition),
+        ], name: "Noord", sticks: 4, beurten: [], position: NoordPosition, ai: HighestPointsAvailableAI()),
       Speler(kaarten: [
         Kaart(symbool: .Klaver, nummer: .Zeven),
         Kaart(symbool: .Schoppen, nummer: .Negen),
         Kaart(symbool: .Schoppen, nummer: .Aas)
-        ], name: "Oost", sticks: 4, beurten: [], position: OostPosition),
+        ], name: "Oost", sticks: 4, beurten: [], position: OostPosition, ai: HighestPointsAvailableAI()),
       Speler(kaarten: [
         Kaart(symbool: .Schoppen, nummer: .Tien),
         Kaart(symbool: .Schoppen, nummer: .Boer),
         Kaart(symbool: .Schoppen, nummer: .Zeven)
-        ], name: "Zuid", sticks: 4, beurten: [], position: ZuidPosition),
+        ], name: "Zuid", sticks: 4, beurten: [], position: ZuidPosition, ai: HighestPointsAvailableAI()),
       Speler(kaarten: [
         Kaart(symbool: .Ruiten, nummer: .Boer),
         Kaart(symbool: .Ruiten, nummer: .Heer),
         Kaart(symbool: .Klaver, nummer: .Boer)
-        ], name: "West", sticks: 4, beurten: [], position: WestPosition)
+        ], name: "West", sticks: 4, beurten: [], position: WestPosition, ai: HighestPointsAvailableAI())
     ]
     
     XCTAssertTrue(game.shouldDoAnotherRound())
   }
   
   func testExcludeDowner() {
-    let game = Game()
+    let game = Game(shouldPrint: false)
     
     //Speler Noord: [♠H, ♥H, ♣H] 30.5
     //Speler Oost: [♣7, ♠9, ♠A] 20.0
@@ -329,22 +329,22 @@ class GameTest: XCTestCase {
         Kaart(symbool: .Schoppen, nummer: .Heer),
         Kaart(symbool: .Harten, nummer: .Heer),
         Kaart(symbool: .Klaver, nummer: .Heer)
-      ], name: "Noord", sticks: 5, beurten: [], position: NoordPosition),
+      ], name: "Noord", sticks: 5, beurten: [], position: NoordPosition, ai: HighestPointsAvailableAI()),
       Speler(kaarten: [
         Kaart(symbool: .Klaver, nummer: .Zeven),
         Kaart(symbool: .Schoppen, nummer: .Negen),
         Kaart(symbool: .Schoppen, nummer: .Aas)
-      ], name: "Oost", sticks: 0, beurten: [], position: OostPosition),
+      ], name: "Oost", sticks: 0, beurten: [], position: OostPosition, ai: HighestPointsAvailableAI()),
       Speler(kaarten: [
         Kaart(symbool: .Schoppen, nummer: .Tien),
         Kaart(symbool: .Schoppen, nummer: .Boer),
         Kaart(symbool: .Schoppen, nummer: .Zeven)
-      ], name: "Zuid", sticks: 5, beurten: [], position: ZuidPosition),
+      ], name: "Zuid", sticks: 5, beurten: [], position: ZuidPosition, ai: HighestPointsAvailableAI()),
       Speler(kaarten: [
         Kaart(symbool: .Ruiten, nummer: .Boer),
         Kaart(symbool: .Ruiten, nummer: .Heer),
         Kaart(symbool: .Klaver, nummer: .Boer)
-      ], name: "West", sticks: 5, beurten: [], position: WestPosition)
+      ], name: "West", sticks: 5, beurten: [], position: WestPosition, ai: HighestPointsAvailableAI())
     ]
     
     XCTAssertEqual(game.pickLosers(), [game.spelers[3]])
@@ -353,8 +353,23 @@ class GameTest: XCTestCase {
   func testPerformanceFullGame() {
     // This is an example of a performance test case.
     self.measureBlock {
-      self.game.startGame()
+      
+      self.game.spelers = [
+        Speler(kaarten: [], name: "Zuid (JIJ)", sticks: 5, beurten: [], position: ZuidPosition, ai: HighestPointsAvailableAI()),
+        Speler(kaarten: [], name: "Oost", sticks: 5, beurten: [], position: OostPosition, ai: HighestPointsAvailableAI()),
+        Speler(kaarten: [], name: "Noord", sticks: 5, beurten: [], position: NoordPosition, ai: HighestPointsAvailableAI()),
+        Speler(kaarten: [], name: "West", sticks: 5, beurten: [], position: WestPosition, ai: HighestPointsAvailableAI())
+      ]
+      
+      self.game.startGame(false)
     }
   }
+  
+  func textMaxPunten() {
+    let punten1 = Punten.AasVerbied
+    let punten2 = Punten.DertigHalf
+    let maxEl = max(punten1, rhs: punten2)
     
+    XCTAssertEqual(maxEl, Punten.AasVerbied)
+  }
 }

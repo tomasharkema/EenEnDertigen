@@ -32,17 +32,23 @@ struct Score {
   }
 }
 
-class TestAI {
+class Tournament {
+  let roundsPerGame: Int
+  let startoffSticks: Int
   
-  static func peformanceOfAI(ai: [(PlayerMove.Type, String)]) -> PlayedGame {
-    let game = Game(print: false)
+  init(roundsPerGame: Int, startoffSticks: Int) {
+    self.roundsPerGame = roundsPerGame
+    self.startoffSticks = startoffSticks
+  }
+  
+  func peformanceOfAI(ai: [(PlayerMove.Type, String)], gameId: Int = 0) -> PlayedGame {
+    let game = Game(shouldPrint: false)
     
     var playedGames = [[Speler]]()
     
-    for _ in 0..<10 {
-      
+    for _ in 1...roundsPerGame {
       game.spelers = ai.map { (ai, name) in
-        return Speler(kaarten: [], name: name, sticks: 5, beurten: [], position: NoordPosition, ai: ai.init())
+        return Speler(kaarten: [], name: name, sticks: startoffSticks, beurten: [], position: NoordPosition, ai: ai.init())
       }
       
       game.startGame(false)
@@ -54,28 +60,37 @@ class TestAI {
     })
   }
   
-  static func testAI() {
-    let AIs: [PlayerMove.Type] = [HighestPointsAvailableAI.self, WisselBot.self, PassBot.self, RandomBot.self, HighestPointsPlusWisselAvailableAI.self]
+  func playTournament() {
+    let AIs: [PlayerMove.Type] = [HighestPointsAvailableKeepHighCardsAI.self, HighestPointsAvailableAI.self, WisselBot.self, PassBot.self, RandomBot.self, HighestPointsPlusWisselAvailableAI.self]
     
     var stats = SynchronizedArray<[String: Int]>()
     
     let dispatchGroup = dispatch_group_create()
     let dispatchQueue = dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)
     
+    let watch = StopWatch()
+    watch.start()
+    
+    var potje = 0
+    
     for ai1 in AIs {
       for ai2 in AIs {
         for ai3 in AIs {
           for ai4 in AIs {
+            potje++
+            let potjeIndex = potje
             dispatch_group_async(dispatchGroup, dispatchQueue) {
+              let duration = StopWatch()
+              duration.start()
               let ais = [(ai1, "\(ai1.algoName) 1"), (ai2, "\(ai2.algoName) 2"), (ai3, "\(ai3.algoName) 3"), (ai4, "\(ai4.algoName) 4")]
-              let res = peformanceOfAI(ais)
+              let res = self.peformanceOfAI(ais, gameId: potjeIndex)
               let winnings = res.winnigs()
               stats.append(winnings)
               
               let aisPrint = ais.map {
                 $0.1
               }
-              print("\(winnings) : \(aisPrint)")
+              print("\(potjeIndex)/\(potje) \(winnings) : \(aisPrint)\ntime: \(watch.getLap()) - \(duration.getLap())")
             }
           }
         }
@@ -84,6 +99,16 @@ class TestAI {
     
     dispatch_group_wait(dispatchGroup, DISPATCH_TIME_FOREVER)
     
-    print(flatten(stats.toArray()))
+    let scores = flatten(stats.toArray()).sort { lhs, rhs in
+      return lhs.1 > rhs.1
+    }
+    
+    print("\n\nSCORES: (potjes van \(roundsPerGame) gewonnen)\n")
+    
+    print(scores.reduce("") { prev, el in
+      return prev + "\(el.0): \(el.1)\n"
+    })
+    
+    print("Tijd: \(watch.getLap())")
   }
 }

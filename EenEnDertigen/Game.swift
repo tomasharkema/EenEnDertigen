@@ -16,7 +16,50 @@ func getKeyboardInput() -> String {
   return strData.stringByTrimmingCharactersInSet(NSCharacterSet.newlineCharacterSet()).lowercaseString
 }
 
-func calculatePoints(base: Kaart, additions: [Kaart]) -> Double {
+enum Punten: Equatable, Comparable {
+  case AasVerbied
+  case Verbied
+  case DertigHalf
+  case Punten(Int)
+  
+  func punten() -> Double {
+    switch self {
+    case .AasVerbied:
+      return 33
+    case .Verbied:
+      return 31
+    case .DertigHalf:
+      return 30.5
+    case let .Punten(punten):
+      return Double(punten)
+    }
+  }
+}
+
+func ==(lhs: Punten, rhs: Punten) -> Bool {
+  return lhs.punten() == rhs.punten()
+}
+
+func >(lhs: Punten, rhs: Punten) -> Bool {
+  return lhs.punten() > rhs.punten()
+}
+func <(lhs: Punten, rhs: Punten) -> Bool {
+  return lhs.punten() < rhs.punten()
+}
+func >=(lhs: Punten, rhs: Punten) -> Bool {
+  return lhs.punten() >= rhs.punten()
+}
+func <=(lhs: Punten, rhs: Punten) -> Bool {
+  return lhs.punten() <= rhs.punten()
+}
+
+func max(lhs: Punten, rhs: Punten) -> Punten {
+  return [lhs, rhs].maxElement({ (lhs, rhs) -> Bool in
+    lhs.punten() < rhs.punten()
+  })!
+}
+
+func calculatePoints(base: Kaart, additions: [Kaart]) -> Punten {
   var sameCount = 0
   
   for addition in additions {
@@ -26,41 +69,55 @@ func calculatePoints(base: Kaart, additions: [Kaart]) -> Double {
     
     if sameCount == additions.count {
       if base.nummer == .Aas {
-        return 33
+        return .AasVerbied
       }
       
-      return 30.5
+      return .DertigHalf
     }
   }
   
   var points = base.nummer.points
   
   for addition in additions {
-    if addition.symbool.rawValue == base.symbool.rawValue {
+    if addition.symbool == base.symbool {
       points += addition.nummer.points
     }
   }
-  return Double(points)
+  
+  if points == 31 {
+    return .Verbied
+  }
+  
+  return .Punten(points)
 }
 
+var pointsCache = [Int: Punten]()
+
 struct Speler: CustomStringConvertible, Equatable, Hashable {
-  var kaarten: [Kaart]
+  var kaarten: [Kaart] {
+    didSet {
+      pointsCache.removeValueForKey(name.hashValue)
+    }
+  }
   let name: String
   var sticks: Int
+  var beurten: [Beurt]
+  let position: Position
+  let ai: PlayerMove
   
-  var points: Double {
+  var points: Punten {
     return [
       calculatePoints(kaarten[0], additions: [kaarten[1], kaarten[2]]),
       calculatePoints(kaarten[1], additions: [kaarten[0], kaarten[2]]),
       calculatePoints(kaarten[2], additions: [kaarten[0], kaarten[1]]),
-    ].reduce(0, combine: { max($0, $1) })
+    ].reduce(Punten.Punten(0)) { max($0, rhs: $1) }
   }
   
   func throwAndGrab(beurt: PossibleBeurt) -> Speler {
     var newKaarten = kaarten
-    newKaarten.remove(beurt.throwKaart)
-    newKaarten.append(beurt.grabKaart)
-    return Speler(kaarten: newKaarten, name: name, sticks: sticks, beurten: beurten, position: position)
+    newKaarten[newKaarten.indexOf(beurt.throwKaart)!] = beurt.grabKaart
+    
+    return Speler(kaarten: newKaarten, name: name, sticks: sticks, beurten: beurten, position: position, ai: ai)
   }
   
   var description: String {
@@ -70,9 +127,6 @@ struct Speler: CustomStringConvertible, Equatable, Hashable {
   var hashValue: Int {
     return name.hashValue
   }
-  
-  var beurten: [Beurt]
-  let position: Position
   
   var latestState: String {
     if let lastBeurt = beurten.last {
@@ -123,11 +177,16 @@ typealias Tafel = [Kaart]
 
 class Game {
   
-  init() {}
+  let shouldPrint: Bool
+  
+  init(shouldPrint: Bool) {
+    self.shouldPrint = shouldPrint
+    shouldPrintGlbl = shouldPrint
+  }
   
   var deck: Deck!
 
-  var spelers: Array<Speler>!
+  var spelers: [Speler]!
   var tafel: Tafel!
   
   // playState
@@ -150,7 +209,17 @@ class Game {
     }
   }
   
-  func commitBeurt(spelerIndex: Int, var speler: Speler, beurt: Beurt) -> Speler {
+  func commitBeurt(spelerIndex: Int, var speler: Speler) -> Speler {
+    
+    let beurt = speler.ai.move(speler, tafel: tafel)
+    
+    let count = speler.beurten.filter {$0 == beurt}.count
+    if count > 50 {
+      //bail out when player is in a loop
+      pass(spelerIndex)
+      return speler
+    }
+    
     speler.beurten.append(beurt)
     switch beurt {
     case let .Switch(possibleBeurt):
@@ -169,55 +238,6 @@ class Game {
     }
   }
   
-  private func getKeuzeFromInput(input: String) -> (Int, Int)? {
-    
-    //input checking:
-    if input.characters.count != 2 {
-      InputPosition.down(1) >>> "Je moet p of 2 cijfers invoeren..."
-      return nil
-    }
-    
-    let firstChar = String(input[advance(input.startIndex, 0)])
-    let lastChar = String(input[advance(input.startIndex, 1)])
-    
-    let first = Int(firstChar)
-    let last = Int(lastChar)
-    
-    if let first = first, last = last {
-      if first < 4 && last < 4 && first > 0 && last > 0 {
-        return (first-1, last-1)
-      }
-    }
-    
-    return nil
-  }
-  
-  func getBeurtFromUser(speler: Speler) -> Beurt {
-    
-    let kaartenString = " ".join(speler.kaarten.map { $0.description })
-    HandPosition >>> "Hand:  \(kaartenString)"
-    InputPosition >>> "Maak je keuze: Type '11' om kaart 1 te pakken, en kaart 1 te gooien. Type 'p' om te passen. Type 'w' om alle kaarten met de tafel te wisselen."
-    
-    let input = getKeyboardInput()
-    
-    if input == "p" {
-      return .Pass
-    } else if input == "w" {
-      return .Wissel
-    } else {
-      if let keuze = getKeuzeFromInput(input) {
-        return .Switch(PossibleBeurt(throwKaart: speler.kaarten[keuze.1], grabKaart: tafel[keuze.0], points: nil))
-      } else {
-        return getBeurtFromUser(speler)
-      }
-    }
-  }
-  
-  func commitUserBeurt(speler: Speler) -> Speler {
-    let beurt = getBeurtFromUser(speler)
-    return commitBeurt(0, speler: speler, beurt: beurt)
-  }
-  
   func beurt() {
     let max = hasPassed ?? spelers.count
     let hasPassedThisTurn = hasPassed
@@ -227,15 +247,11 @@ class Game {
       
       if !spelers[index].isDowner {
       
-        if index == 0 && !Test {
-          speler = commitUserBeurt(spelers[index])
-        } else {
-          speler = commitBeurt(index, speler: spelers[index], beurt: AIbeurt(spelers[index], tafel: tafel))
-        }
+        speler = commitBeurt(index, speler: spelers[index])
         
         spelers[index] = speler
         printState()
-        if speler.points == 31 {
+        if speler.points == .Verbied || speler.points == .AasVerbied {
           return
         }
         
@@ -248,6 +264,9 @@ class Game {
   }
   
   func printState() {
+    if !shouldPrint {
+      return
+    }
     setBackground()
     clear()
     HeaderPosition >>> "EENENDERTIGEN"
@@ -273,6 +292,10 @@ class Game {
   }
   
   func printEndState() {
+    if !shouldPrint {
+      return
+    }
+  
     setBackground()
     clear()
     HeaderPosition >>> "EENENDERTIGEN"
@@ -284,11 +307,11 @@ class Game {
       if !speler.isDowner {
         
         var extraMessage = ""
-        if shouldDoAnotherRound() {
+        if !shouldDoAnotherRound() {
           extraMessage = " WINNAAR!"
         } else if losers.contains(speler) {
           extraMessage = " - Verliezer!"
-        } else if speler.points == 31 {
+        } else if speler.points == .Verbied || speler.points == .AasVerbied {
           extraMessage = " - Verbied!"
         }
         
@@ -352,11 +375,12 @@ class Game {
     deel()
     printState()
     beurt()
+    
     finishRound()
     printEndState()
   }
   
-  private func startGameRec(restartClosure: (() -> Bool)?, finishClosure: (() -> Bool)?) {
+  private func startGameRec(defaultPlayers: Bool = true, restartClosure: (() -> Bool)?, finishClosure: (() -> Bool)?) {
     startRound()
     
     let restart: () -> Bool = {
@@ -368,23 +392,28 @@ class Game {
     }
     
     if shouldDoAnotherRound() && restart() {
-      startGameRec(restartClosure, finishClosure: finishClosure)
+      startGameRec(defaultPlayers, restartClosure: restartClosure, finishClosure: finishClosure)
     } else {
-      showFinishedState()
       if finishClosure?() ?? false {
-        startGame(restartClosure, finishClosure: finishClosure)
+        startGame(defaultPlayers, restartClosure: restartClosure, finishClosure: finishClosure)
       }
     }
   }
   
-  func startGame(restartClosure: (() -> Bool)? = nil, finishClosure: (() -> Bool)? = nil) {
-    spelers = [
-      Speler(kaarten: [], name: "Zuid (JIJ)", sticks: 5, beurten: [], position: ZuidPosition),
-      Speler(kaarten: [], name: "Oost", sticks: 5, beurten: [], position: OostPosition),
-      Speler(kaarten: [], name: "Noord", sticks: 5, beurten: [], position: NoordPosition),
-      Speler(kaarten: [], name: "West", sticks: 5, beurten: [], position: WestPosition)
-    ]
+  func startGame(defaultPlayers: Bool = true, restartClosure: (() -> Bool)? = nil, finishClosure: (() -> Bool)? = nil) {
+    if defaultPlayers {
+      spelers = [
+        Speler(kaarten: [], name: "Zuid (JIJ)", sticks: 5, beurten: [], position: ZuidPosition, ai: UserInputAI()),
+        Speler(kaarten: [], name: "Oost", sticks: 5, beurten: [], position: OostPosition, ai: HighestPointsAvailableAI()),
+        Speler(kaarten: [], name: "Noord", sticks: 5, beurten: [], position: NoordPosition, ai: HighestPointsAvailableAI()),
+        Speler(kaarten: [], name: "West", sticks: 5, beurten: [], position: WestPosition, ai: HighestPointsAvailableAI())
+      ]
+    } else {
+      if spelers == nil {
+        //print("WAT?")
+      }
+    }
     
-    startGameRec(restartClosure, finishClosure: finishClosure)
+    startGameRec(defaultPlayers, restartClosure: restartClosure, finishClosure: finishClosure)
   }
 }

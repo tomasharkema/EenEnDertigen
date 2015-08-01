@@ -11,13 +11,11 @@ import Foundation
 struct PossibleBeurt: Equatable {
   let throwKaart: Kaart
   let grabKaart: Kaart
-  let points: Double?
 }
 
 func ==(lhs: PossibleBeurt, rhs: PossibleBeurt) -> Bool {
   return
     lhs.grabKaart == rhs.grabKaart &&
-    lhs.points == rhs.points &&
     lhs.throwKaart == rhs.throwKaart
 }
 
@@ -53,37 +51,34 @@ func ==(lhs: Beurt, rhs: Beurt) -> Bool {
   return false
 }
 
-func AIbeurt(hand: Speler, tafel: Tafel) -> Beurt {
+func getKeuzeFromInput(input: String) -> (Int, Int)? {
   
-  var possibleBeurten = [PossibleBeurt]()
+  //input checking:
+  if input.characters.count != 2 {
+    InputPosition.down(1) >>> "Je moet p of 2 cijfers invoeren..."
+    return nil
+  }
   
-  for tafelKaart in tafel {
-    for (handIndex, handKaart) in hand.kaarten.enumerate() {
-      
-      possibleBeurten.append(
-        PossibleBeurt(
-          throwKaart: handKaart,
-          grabKaart: tafelKaart,
-          points: calculatePoints(tafelKaart, additions: hand.kaarten.without(handIndex)))
-      )
+  let firstChar = String(input[advance(input.startIndex, 0)])
+  let lastChar = String(input[advance(input.startIndex, 1)])
+  
+  let first = Int(firstChar)
+  let last = Int(lastChar)
+  
+  if let first = first, last = last {
+    if first < 4 && last < 4 && first > 0 && last > 0 {
+      return (first-1, last-1)
     }
   }
   
-  let commitBeurt = bestBeurt(possibleBeurten)
-  
-  if (hand.points > commitBeurt.points) {
-    return .Pass
-  } else {
-    let wisselPoints = calculatePoints(tafel[0], additions: tafel.without(0))
-    if wisselPoints > commitBeurt.points {
-      return .Wissel
-    }
-    return .Switch(commitBeurt)
-  }
+  return nil
 }
 
-func bestBeurt(beurten: [PossibleBeurt]) -> PossibleBeurt {
-  return beurten.maxElement { (lhs, rhs) -> Bool in
-    lhs.points < rhs.points
-  }!
+protocol PlayerMove {
+  static var algoName: String { get }
+  
+  init()
+  
+  func move(speler: Speler, tafel: Tafel) -> Beurt
 }
+

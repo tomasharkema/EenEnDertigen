@@ -18,35 +18,26 @@ extension Array {
     }
   }
   
-  func without(index: Int) -> [Element] {
-    var newArray = [Element]()
-    
-    for (elIndex, el) in self.enumerate() {
-      if index != elIndex {
-        newArray.append(el)
-      }
-    }
-    
-    return newArray
-  }
+//  func without(index: Int) -> [Element] {
+//    var newArray = [Element]()
+//    newArray = self
+//    newArray.removeAtIndex(index)
+//    return newArray
+//  }
 }
 
 extension Array where Element: Equatable {
   mutating func remove(el: Element) {
-    self = self.filter({ (element: Element) -> Bool in
+    self = self.filter { (element: Element) -> Bool in
       el != element
-    })
+    }
   }
   
   func without(el: Element) -> Array<Element> {
-    var newArray = Array<Element>()
-    
-    for obj in self {
-      if el != obj {
-        newArray.append(obj)
-      }
+    var newArray = self
+    if let index = newArray.indexOf(el) {
+      newArray.removeAtIndex(index)
     }
-    
     return newArray
   }
   
@@ -54,7 +45,7 @@ extension Array where Element: Equatable {
     var newArray = self
     
     for e in el {
-      newArray.remove(e)
+      newArray = newArray.without(e)
     }
     
     return newArray
@@ -84,5 +75,33 @@ extension Set where Element: Equatable {
     }
     
     return newArray
+  }
+}
+
+func flatten(el: [[String: Int]]) -> [String: Int] {
+  var newDict = [String: Int]()
+  
+  for e in el {
+    for (k, v) in e {
+      newDict[k] = (newDict[k] ?? 0) + v
+    }
+  }
+  
+  return newDict
+}
+
+extension Int {
+  static func random(range: Range<Int> ) -> Int {
+    var offset = 0
+    
+    if range.startIndex < 0   // allow negative ranges
+    {
+      offset = abs(range.startIndex)
+    }
+    
+    let mini = UInt32(range.startIndex + offset)
+    let maxi = UInt32(range.endIndex   + offset)
+    
+    return Int(mini + arc4random_uniform(maxi - mini)) - offset
   }
 }

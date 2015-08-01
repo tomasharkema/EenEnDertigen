@@ -10,18 +10,22 @@ import XCTest
 
 class ExtensionTest: XCTestCase {
 
-    func remove() {
-      var arr = [1,2,3,4,5,6,7]
-      arr.remove(1)
-      
-      XCTAssertEqual(arr, [2,3,4,5,6,7])
-    }
-
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measureBlock {
-            // Put the code you want to measure the time of here.
-        }
-    }
-
+  func testRemove() {
+    var arr = [1,2,3,4,5,6,7]
+    arr.remove(1)
+    
+    XCTAssertEqual(arr, [2,3,4,5,6,7])
+  }
+  
+  func testWithout() {
+    let arr = [1,2,3,4,5,6]
+    let newArr = arr.without(1)
+    XCTAssertEqual(newArr, [2,3,4,5,6])
+  }
+  
+  func testFlatten() {
+    let dict: [[String: Int]] = [["A": 1, "B": 1], ["A": 1, "B": 1], ["A": 1, "B": 1, "C": 3], ["C": 2]]
+    
+    XCTAssertEqual(flatten(dict), ["A": 3, "B": 3, "C": 5])
+  }
 }

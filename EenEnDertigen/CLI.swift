@@ -11,6 +11,8 @@ import Foundation
 let Background = "44"
 let TextColor = "39"
 
+var shouldPrintGlbl = true
+
 struct Position {
   let x: Int
   let y: Int
@@ -36,15 +38,15 @@ enum Color: String {
 let ClearChar = "\u{1B}[2J"
 
 func clear() {
-  print(ClearChar)
+  if shouldPrintGlbl { print(ClearChar) }
 }
 
 func setBackground() {
-  print("\u{1B}[\(TextColor);\(Background);m")
+  if shouldPrintGlbl { print("\u{1B}[\(TextColor);\(Background);m") }
 }
 
 func print(pos: Position, string: String) {
-  print("\u{001B}[\(TextColor);\(Background);m\(pos.cliRep)\(string)")
+  if shouldPrintGlbl { print("\u{001B}[\(TextColor);\(Background);m\(pos.cliRep)\(string)") }
 }
 
 infix operator >>> {}

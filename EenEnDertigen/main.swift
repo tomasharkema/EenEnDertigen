@@ -8,39 +8,39 @@
 
 import Foundation
 
-let game = Game()
-game.startGame({
-  InputPosition >>> "Type 'r' om het spel te herstarten..."
-  let input = getKeyboardInput()
-  if input == "r" {
-    fflush(__stdoutp)
-    return true
-  } else {
-    return false
-  }
-}, finishClosure: {
-  InputPosition >>> "Einde!"
-  let input = getKeyboardInput()
-  if input == "r" {
-    fflush(__stdoutp)
-    return true
-  } else {
-    return false
-  }
-})
+let args = Process.arguments
 
-//func startGame() {
-//  game.startRound()
-//  
-//  InputPosition >>> "Type 'r' om het spel te herstarten..."
-//  
-//  let input = getKeyboardInput()
-//  if input == "r" {
-//    fflush(__stdoutp)
-//    startGame()
-//  } else {
-//    exit(0)
-//  }
-//}
-//
-//startGame()
+var tournament = false
+
+if args.count > 1 {
+  let arg = args[1]
+  
+  if arg == "test-ai" {
+    tournament = true
+  }
+}
+
+if tournament {
+  Tournament(roundsPerGame: 20, startoffSticks: 5).playTournament()
+} else {
+  let game = Game(shouldPrint: true)
+  game.startGame(true, restartClosure: {
+    InputPosition >>> "Type 'r' om het spel te herstarten..."
+    let input = getKeyboardInput()
+    if input == "r" {
+      fflush(__stdoutp)
+      return true
+    } else {
+      return false
+    }
+    }, finishClosure: {
+      InputPosition >>> "Einde!"
+      let input = getKeyboardInput()
+      if input == "r" {
+        fflush(__stdoutp)
+        return true
+      } else {
+        return false
+      }
+  })
+}
